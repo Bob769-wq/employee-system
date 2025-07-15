@@ -1,0 +1,65 @@
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  Injectable,
+} from '@angular/core';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+  MatDialogTitle,
+} from '@angular/material/dialog';
+import { firstValueFrom } from 'rxjs';
+
+export type <%= className %>DialogData = undefined;
+
+export type <%= className %>DialogResult = undefined;
+
+@Injectable({ providedIn: 'root' })
+export class <%= className %>DialogService {
+  readonly #dialog = inject(MatDialog);
+
+  open(data: <%= className %>DialogData) {
+    const dialogRef = this.#dialog.open<
+      <%= className %>DialogComponent,
+      <%= className %>DialogData,
+      <%= className %>DialogResult
+    >(<%= className %>DialogComponent, {
+      data,
+    });
+    return firstValueFrom(dialogRef.afterClosed());
+  }
+}
+
+@Component({
+  selector: '<%= prefix %>-<%= fileName %>-dialog',
+  imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose],
+  template: `
+    <h2 mat-dialog-title>Dialog Title</h2>
+
+    <mat-dialog-content>
+      This is the content of the dialog.
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+      <button matDialogClose>Cancel</button>
+      <button (click)="onConfirm()">Confirm</button>
+    </mat-dialog-actions>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class <%= className %>DialogComponent {
+  readonly #dialogRef = inject(
+    MatDialogRef<<%= className %>DialogComponent, <%= className %>DialogResult>,
+  );
+  readonly data = inject<<%= className %>DialogData>(MAT_DIALOG_DATA);
+
+  onConfirm() {
+    let result: <%= className %>DialogResult;
+    this.#dialogRef.close(result);
+  }
+}

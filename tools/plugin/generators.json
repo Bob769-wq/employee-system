@@ -1,0 +1,24 @@
+{
+  "generators": {
+    "app": {
+      "factory": "./src/app/generator",
+      "schema": "./src/app/schema.json",
+      "description": "angular app generator"
+    },
+    "component": {
+      "factory": "./src/component/generator",
+      "schema": "./src/component/schema.json",
+      "description": "component generator"
+    },
+    "dialog": {
+      "factory": "./src/dialog/generator",
+      "schema": "./src/dialog/schema.json",
+      "description": "material dialog generator"
+    },
+    "library": {
+      "factory": "./src/library/generator",
+      "schema": "./src/library/schema.json",
+      "description": "angular library generator"
+    }
+  }
+}

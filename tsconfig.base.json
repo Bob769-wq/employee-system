@@ -1,0 +1,32 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@app/common/seo/ui/title": ["web/libs/common/seo/ui/title/src/index.ts"],
+      "@app/common/signal/ui/form": [
+        "web/libs/common/signal/ui/form/src/index.ts"
+      ],
+      "@app/common/signal/ui/query": [
+        "web/libs/common/signal/ui/query/src/index.ts"
+      ],
+      "@app/common/signal/ui/selection-model": [
+        "web/libs/common/signal/ui/selection-model/src/index.ts"
+      ],
+      "@app/plugin": ["tools/plugin/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

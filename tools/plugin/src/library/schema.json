@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/schema",
+  "$id": "Angular",
+  "title": "",
+  "type": "object",
+  "properties": {
+    "app": {
+      "type": "string",
+      "description": "",
+      "$default": {
+        "$source": "argv",
+        "index": 1
+      },
+      "x-prompt": "What application would you like to use?"
+    },
+    "domain": {
+      "type": "string",
+      "description": "",
+      "$default": {
+        "$source": "argv",
+        "index": 2
+      },
+      "x-prompt": "What domain would you like to use?"
+    },
+    "type": {
+      "type": "string",
+      "description": "",
+      "$default": {
+        "$source": "argv",
+        "index": 3
+      },
+      "x-prompt": {
+        "message": "What type of library would you like to create?",
+        "type": "list",
+        "items": ["data-access", "feature", "ui", "utils", "api"]
+      }
+    },
+    "name": {
+      "type": "string",
+      "description": "",
+      "$default": {
+        "$source": "argv",
+        "index": 4
+      },
+      "x-prompt": "What name would you like to use?"
+    }
+  },
+  "required": ["app", "domain", "type", "name"]
+}

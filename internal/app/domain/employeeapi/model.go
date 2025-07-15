@@ -1,9 +1,9 @@
 package employeeapi
 
 import (
-	"github.com/mayainfo/employee-practice-be/internal/app/domain/townapi"
 	"time"
 
+	"github.com/mayainfo/employee-practice-be/internal/app/domain/townapi"
 	"github.com/mayainfo/employee-practice-be/internal/business/domain/employee"
 	"github.com/mayainfo/employee-practice-be/internal/framework/validate"
 )

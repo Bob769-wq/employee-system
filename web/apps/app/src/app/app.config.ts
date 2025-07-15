@@ -26,6 +26,8 @@ import {
 import { provideAngularSvgIcon } from 'angular-svg-icon';
 
 import { appRoutes } from './app.routes';
+import { environment } from './environments/environment';
+import { ApiConfiguration } from './shared/data-access/api/api-configuration';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -74,6 +76,15 @@ export const appConfig: ApplicationConfig = {
       }),
       withDevtools(),
     ),
+
+    {
+      provide: ApiConfiguration,
+      useFactory: () => {
+        const config = new ApiConfiguration();
+        config.rootUrl = environment.api.url;
+        return config;
+      },
+    },
 
     provideAppTitle('My Angular App'),
   ],

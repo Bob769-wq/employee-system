@@ -52,7 +52,7 @@ func toApp{{.DomainPluralU}}({{.DomainVars}} []{{.DomainL}}.{{.DomainU}}) []App{
 // =============================================================================
 
 type AppNew{{.DomainU}} struct {
-{{- range .JSONFields }}
+{{- range .AppCreateStructFields }}
 {{.}}
 {{- end}}
 // codegen:{AN}

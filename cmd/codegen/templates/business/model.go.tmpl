@@ -21,7 +21,7 @@ type {{.DomainU}} struct {
 }
 {{if not .WithQueryOnly}}
 type New{{.DomainU}} struct {
-{{- range .CoreFields }}
+{{- range .CoreCreateStructFields }}
 {{.}}
 {{- end}}
 // codegen:{BN}

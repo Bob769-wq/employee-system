@@ -47,7 +47,7 @@ func (s *Store) Count(ctx context.Context, filter {{.DomainL}}.QueryFilter) (int
 
     const q = `
         SELECT COUNT(*)
-        FROM {{.DomainPlural}}
+        FROM {{.DBTableName}}
     `
 
     var sb strings.Builder
@@ -74,16 +74,12 @@ func (s *Store) Query(ctx context.Context, filter {{.DomainL}}.QueryFilter, orde
     }
 
     const q = `
-        SELECT {{.DomainL}}_id,
-           {{- if .WithOptConcur}}
-               etag,
-           {{- end}}
-               created_at,
-               updated_at{{if .WithSoftDelete}},{{end}}
-           {{- if .WithSoftDelete}}
-               deleted_at
-           {{- end}}
-        FROM {{.DomainPlural}}
+        SELECT  {{.DBPrefix}}_id,{{ range .SQLQueryFields }}
+                {{.}}
+                {{- end}}{{- if .WithOptConcur}},
+                etag
+                {{- end}}
+        FROM {{.DBViewName}}
     `
 
     var sb strings.Builder
@@ -107,23 +103,19 @@ func (s *Store) Query(ctx context.Context, filter {{.DomainL}}.QueryFilter, orde
 // QueryByID finds the {{.DomainL}} identified by a given ID.
 func (s *Store) QueryByID(ctx context.Context, {{.DomainL}}ID int) ({{.DomainL}}.{{.DomainU}}, error) {
     data := struct {
-        ID int `db:"{{.DomainL}}_id"`
+        ID int `db:"{{.DBPrefix}}_id"`
     }{
         ID: {{.DomainL}}ID,
     }
 
     const q = `
-        SELECT {{.DomainL}}_id,
-           {{- if .WithOptConcur}}
-               etag,
-           {{- end}}
-               created_at,
-               updated_at{{if .WithSoftDelete}},{{end}}
-           {{- if .WithSoftDelete}}
-               deleted_at
-           {{- end}}
-        FROM {{.DomainPlural}}
-        WHERE {{.DomainL}}_id = :{{.DomainL}}_id
+        SELECT {{.DBPrefix}}_id,{{ range .SQLQueryFields }}
+               {{.}}
+               {{- end}}{{- if .WithOptConcur}},
+               etag
+               {{- end}}
+        FROM {{.DBViewName}}
+        WHERE {{.DBPrefix}}_id = :{{.DBPrefix}}_id
     `
 
     var db{{.DomainVar}} db{{.DomainU}}
@@ -145,19 +137,17 @@ func (s *Store) Create(ctx context.Context, {{.DomainVar}} {{.DomainL}}.{{.Domai
     {{- end}}
 
     const q = `
-        INSERT INTO {{.DomainPlural}}
-        {{- if .WithOptConcur}}
-            (etag, created_at, updated_at)
-        {{- else}}
-            (created_at, updated_at)
-        {{- end}}
+        INSERT INTO {{.DBTableName}}
+        (   {{ range .SQLCreateFields }}
+            {{.}}
+            {{- end}}
+        )
         VALUES
-        {{- if .WithOptConcur}}
-            (:etag, :created_at, :updated_at)
-        {{- else}}
-            (:created_at, :updated_at)
-        {{- end}}
-        RETURNING {{.DomainL}}_id
+        (   {{ range .SQLCreateFields }}
+            :{{.}}
+            {{- end}}
+        )
+        RETURNING {{.DBPrefix}}_id
     `
 
     if err := sqldb.NamedQueryStruct(ctx, s.db, q, db{{.DomainVar}}, &db{{.DomainVar}}); err != nil {
@@ -176,19 +166,21 @@ func (s *Store) Update(ctx context.Context, {{.DomainVar}} {{.DomainL}}.{{.Domai
     db{{.DomainVar}} := toDB{{.DomainU}}({{.DomainVar}})
 
     const q = `
-        UPDATE {{.DomainPlural}}
-        SET updated_at = :updated_at{{if .WithOptConcur}},{{end}}
-        {{- if .WithSoftDelete}}
-            deleted_at = :deleted_at,
-                {{- end}}
-        {{- if .WithOptConcur}}
+        UPDATE {{.DBTableName}}
+        SET
+            updated_at = :updated_at,{{ range .SQLUpdateFields }}
+            {{- if and (ne . "created_at") (ne . "updated_at") (ne . "etag") }}
+            {{ . }}
+            {{- end }}
+            {{- end }}{{- if .WithOptConcur}},{{- end}}
+            {{- if .WithOptConcur}}
             etag       = etag + 1
-        {{- end}}
-        WHERE {{.DomainL}}_id = :{{.DomainL}}_id
+            {{- end}}
+        WHERE {{.DBPrefix}}_id = :{{.DBPrefix}}_id
         {{- if .WithOptConcur}}
-          AND etag = :etag
+        AND etag = :etag
         {{- end}}
-        RETURNING {{.DomainL}}_id{{if .WithOptConcur}}, etag{{end}}
+        RETURNING {{.DBPrefix}}_id{{if .WithOptConcur}}, etag{{end}}
     `
 
     if err := sqldb.NamedQueryStruct(ctx, s.db, q, db{{.DomainVar}}, &db{{.DomainVar}}); err != nil {
@@ -209,15 +201,15 @@ func (s *Store) Update(ctx context.Context, {{.DomainVar}} {{.DomainL}}.{{.Domai
 // Delete removes the {{.DomainU}} identified by a given ID.
 func (s *Store) Delete(ctx context.Context, {{.DomainVar}} {{.DomainL}}.{{.DomainU}}) error {
     data := struct {
-        ID int `db:"{{.DomainL}}_id"`
+        ID int `db:"{{.DBPrefix}}_id"`
     }{
         ID: {{.DomainVar}}.ID,
     }
 
     const q = `
         DELETE
-        FROM {{.DomainPlural}}
-        WHERE {{.DomainL}}_id = :{{.DomainL}}_id
+        FROM {{.DBTableName}}
+        WHERE {{.DBPrefix}}_id = :{{.DBPrefix}}_id
     `
 
     if err := sqldb.NamedExecContext(ctx, s.db, q, data); err != nil {
@@ -233,10 +225,12 @@ func (s *Store) Delete(ctx context.Context, {{.DomainVar}} {{.DomainL}}.{{.Domai
 // Query retrieves a list of existing {{.DomainPlural}} from the database.
 func (s *Store) Query(ctx context.Context) ([]{{.DomainL}}.{{.DomainU}}, error) {
     const q = `
-        SELECT {{.DomainL}}_id,
-               created_at,
-               updated_at
-        FROM {{.DomainPlural}}
+        SELECT  {{.DBPrefix}}_id,{{ range .SQLQueryFields }}
+                {{.}}
+                {{- end}}{{- if .WithOptConcur}},
+                etag
+                {{- end}}
+        FROM {{.DBTableName}}
     `
 
     var db{{.DomainVars}} []db{{.DomainU}}

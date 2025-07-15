@@ -248,18 +248,36 @@ func walkWork(mod string, domain string, abbr string, plural string, basePath st
 	fields := projectFieldsz()
 	coreFields := coreFieldsz(fields)
 	jsonFields := jsonFieldsz(fields)
-	dbFields := dbFieldsz(fields, cfg.OneToManyOnly)
-	toAppStructFields := toAppStructFieldsz(fields, tempDomainVar)
-	toCoreNewStructFields := toCoreNewStructFieldsz(fields)
-	toCoreUpdateStructFields := toCoreUpdateStructFieldsz(fields)
-	toDBStructFields := toDBStructFieldsz(fields, tempDomainVar)
-	toCoreStructFields := toCoreStructFieldsz(fields, tempDomainVar)
-	coreCreateFunction := coreCreateFunctionz(fields, tempDomainVar)
-	coreUpdateFunction := coreUpdateFunctionz(fields, tempDomainVar)
-	patchPointerTypeFieldsz := patchPointerTypeFields(fields)
-	appUpdateStructFields := jsonFieldsz(patchPointerTypeFieldsz)
-	coreUpdateStructFields := coreFieldsz(patchPointerTypeFieldsz)
+	createTypeFieldsz := createTypeFields(fields)
+	putUpdateTypeFieldsz := putUpdateTypeFields(fields)
 
+	dbFields := dbFieldsz(fields, cfg.OneToManyOnly)
+	toDBStructFields := toDBStructFieldsz(fields, tempDomainVar)
+	toAppStructFields := toAppStructFieldsz(fields, tempDomainVar)
+	toCoreStructFields := toCoreStructFieldsz(fields, tempDomainVar)
+
+	appCreateStructFields := jsonFieldsz(createTypeFieldsz)
+	coreCreateStructFields := coreFieldsz(createTypeFieldsz)
+	coreCreateFunction := coreCreateFunctionz(createTypeFieldsz, tempDomainVar)
+	toCoreNewStructFields := toCoreNewStructFieldsz(createTypeFieldsz)
+	httpCreateStructFields := httpFieldsz(createTypeFieldsz)
+
+	appUpdateStructFields := jsonFieldsz(putUpdateTypeFieldsz)
+	coreUpdateStructFields := coreFieldsz(putUpdateTypeFieldsz)
+	coreUpdateFunction := corePutUpdateFunctionz(putUpdateTypeFieldsz, tempDomainVar)
+	toCoreUpdateStructFields := toCoreUpdateStructFieldsz(putUpdateTypeFieldsz)
+	httpUpdateStructFields := httpFieldsz(putUpdateTypeFieldsz)
+
+	sqlQueryFields := sqlQueryFieldsz(fields)
+	sqlCreateFields := sqlQueryFieldsz(createTypeFieldsz)
+	sqlUpdateFields := sqlUpdateFieldsz(putUpdateTypeFieldsz)
+
+	yamlDisplayRequired := yamlDisplayRequiredz(fields)
+	yamlDisplayProperties := yamlDisplayPropertiesz(fields)
+	yamlCreateRequired := yamlCreateRequiredz(createTypeFieldsz)
+	yamlCreateProperties := yamlCreatePropertiesz(createTypeFieldsz)
+	yamlUpdateRequired := yamlUpdateRequiredz(putUpdateTypeFieldsz)
+	yamlUpdateProperties := yamlUpdatePropertiesz(putUpdateTypeFieldsz)
 	var otm string
 	var otmp string
 	if cfg.NewModelName != "" {
@@ -272,6 +290,10 @@ func walkWork(mod string, domain string, abbr string, plural string, basePath st
 		otmp = strings.ToUpper(cfg.NewModelPlural[0:1]) + cfg.NewModelPlural[1:]
 	} else {
 		otmp = ""
+	}
+
+	if !slices.Contains(acceptableTanStackVersions, CurrentTanStackVersion) {
+		panic("TanStack Version mismatch with template version, please check compatibility and renew acceptableTanStackVersions in constants.go")
 	}
 
 	d := struct {
@@ -297,15 +319,37 @@ func walkWork(mod string, domain string, abbr string, plural string, basePath st
 		CoreCreateFunction       []string
 		CoreUpdateFunction       []string
 		AppUpdateStructFields    []string
+		AppCreateStructFields    []string
+		CoreCreateStructFields   []string
 		CoreUpdateStructFields   []string
 		DBPrefix                 string
 		DBTableName              string
+		DBViewName               string
 		OneToManyNewModelName    string
 		OneToManyNewModelNameL   string
 		OneToManyNewModelPlural  string
 		OneToManyNewModelPluralL string
 		// Options
 		Config
+
+		SQLQueryFields  []string
+		SQLUpdateFields []string
+		SQLCreateFields []string
+
+		YamlDisplayRequired    []string
+		YamlDisplayProperties  []string
+		YamlCreateRequired     []string
+		YamlCreateProperties   []string
+		YamlUpdateRequired     []string
+		YamlUpdateProperties   []string
+		ChineseName            string
+		DefaultPath            string
+		DomainCamelU           string
+		DomainCamelL           string
+		DomainPluralCamelU     string
+		DomainPluralCamelL     string
+		HttpCreateStructFields []string
+		HttpUpdateStructFields []string
 	}{
 		Module:                   mod,
 		DomainL:                  strings.ToLower(domain),
@@ -318,6 +362,10 @@ func walkWork(mod string, domain string, abbr string, plural string, basePath st
 		DomainUpdVar:             "u" + strings.ToUpper(domainVar[0:1]) + strings.ToLower(domainVar[1:]),
 		DomainPlural:             strings.ToLower(domainPlural),
 		DomainPluralU:            strings.ToUpper(domainPlural[0:1]) + domainPlural[1:],
+		DomainPluralCamelL:       strings.ToLower(domainPlural[0:1]) + domainPlural[1:],
+		DomainPluralCamelU:       strings.ToUpper(domainPlural[0:1]) + domainPlural[1:],
+		DomainCamelU:             strings.ToUpper(domain[0:1]) + domain[1:],
+		DomainCamelL:             strings.ToLower(domain[0:1]) + domain[1:],
 		CoreFields:               coreFields,
 		JSONFields:               jsonFields,
 		DBFields:                 dbFields,
@@ -329,15 +377,33 @@ func walkWork(mod string, domain string, abbr string, plural string, basePath st
 		CoreCreateFunction:       coreCreateFunction,
 		CoreUpdateFunction:       coreUpdateFunction,
 		AppUpdateStructFields:    appUpdateStructFields,
+		AppCreateStructFields:    appCreateStructFields,
 		CoreUpdateStructFields:   coreUpdateStructFields,
+		CoreCreateStructFields:   coreCreateStructFields,
 		DBPrefix:                 dbPrefix,
 		DBTableName:              dbTableName,
+		DBViewName:               getDBViewName(),
 		OneToManyNewModelName:    otm,
 		OneToManyNewModelNameL:   strings.ToLower(otm),
 		OneToManyNewModelPlural:  otmp,
 		OneToManyNewModelPluralL: strings.ToLower(otmp),
 		// Options
 		Config: cfg,
+
+		SQLQueryFields:  sqlQueryFields,
+		SQLUpdateFields: sqlUpdateFields,
+		SQLCreateFields: sqlCreateFields,
+
+		YamlDisplayRequired:    yamlDisplayRequired,
+		YamlDisplayProperties:  yamlDisplayProperties,
+		YamlCreateRequired:     yamlCreateRequired,
+		YamlCreateProperties:   yamlCreateProperties,
+		YamlUpdateRequired:     yamlUpdateRequired,
+		YamlUpdateProperties:   yamlUpdateProperties,
+		ChineseName:            chineseName,
+		DefaultPath:            defaultPath,
+		HttpCreateStructFields: httpCreateStructFields,
+		HttpUpdateStructFields: httpUpdateStructFields,
 	}
 
 	var b bytes.Buffer

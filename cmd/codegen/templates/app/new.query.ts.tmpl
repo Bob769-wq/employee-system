@@ -1,0 +1,114 @@
+import {{"{"}} inject, Injectable {{"}"}} from '@angular/core';
+import {{"{"}}
+  injectMutation,
+  QueryClient,
+  queryOptions,
+{{"}"}} from '@tanstack/angular-query-experimental';
+import {{"{"}} firstValueFrom {{"}"}} from 'rxjs';
+import {{"{"}} toast {{"}"}} from 'ngx-sonner';
+import {{"{"}} {{.DomainU}}ApiService {{"}"}} from './shared/data-access/api/services';
+import {{"{"}} LoadingService {{"}"}} from './shared/services/loading.service';
+import {{"{"}} Get{{.DomainPluralU}}$Params {{"}"}} from './shared/data-access/api/fn/{{.DomainL}}-api/get-{{.DomainPlural}}';
+import {{"{"}} {{.DomainU}}CreateInput {{"}"}} from './shared/data-access/api/models/{{.DomainL}}-create-input';
+import {{"{"}} handleErrorMessage {{"}"}} from './shared/error-handling';
+import {{"{"}} {{.DomainU}}UpdateInput {{"}"}} from './shared/data-access/api/models/{{.DomainL}}-update-input';
+
+@Injectable({{"{"}}
+  providedIn: 'root',
+{{"}"}})
+export class {{.DomainPluralU}}QueryService {{"{"}}
+  #{{.DomainCamelL}}Service = inject({{.DomainU}}ApiService);
+  #loadingService = inject(LoadingService);
+  #qc = inject(QueryClient);
+
+  {{.DomainPluralCamelL}}Query = (params?: Get{{.DomainPluralU}}$Params) =>
+    queryOptions({{"{"}}
+      queryKey: ['{{.DefaultPath}}', 'list', params],
+      queryFn: () =>
+        firstValueFrom(
+          this.#{{.DomainCamelL}}Service.get{{.DomainPluralU}}({{"{"}}{{if .WithPagination}}
+            pageSize: params?.pageSize,
+            page: params?.page,
+            orderBy: params?.orderBy,{{end}}
+          {{"}"}}),
+        ),
+    {{"}"}});
+
+  {{.DomainCamelL}}QueryById = ({{.DomainCamelL}}Id: number) =>
+    queryOptions({{"{"}}
+      queryKey: ['{{.DefaultPath}}', 'detail', {{.DomainCamelL}}Id],
+      queryFn: () => firstValueFrom(this.#{{.DomainCamelL}}Service.get{{.DomainU}}({{"{"}} {{.DomainCamelL}}Id {{"}"}})),
+    {{"}"}});
+
+  createMutation = () =>
+    injectMutation(() => ({{"{"}}
+      mutationFn: (params: {{.DomainU}}CreateInput) =>
+        firstValueFrom(
+          this.#{{.DomainCamelL}}Service.create{{.DomainU}}({{"{"}}
+            body: params,
+          {{"}"}}),
+        ),
+      onMutate: () => {{"{"}}
+        this.#loadingService.show();
+      {{"}"}},
+      onSuccess: async () => {{"{"}}
+        await this.#qc.invalidateQueries({{"{"}}
+          queryKey: ['{{.DefaultPath}}'],
+        {{"}"}});
+        toast.success('{{.ChineseName}}新增成功');
+      {{"}"}},
+      onError: (error) => {{"{"}}
+        toast.error(handleErrorMessage(error));
+      {{"}"}},
+      onSettled: () => {{"{"}}
+        this.#loadingService.hide();
+      {{"}"}},
+    {{"}"}}));
+
+  updateMutation = () =>
+    injectMutation(() => ({{"{"}}
+      mutationFn: ({{"{"}}
+        {{.DomainCamelL}}Id,
+        body,
+      {{"}"}}: {{"{"}}
+        {{.DomainCamelL}}Id: number;
+        body: {{.DomainU}}UpdateInput;
+      {{"}"}}) => firstValueFrom(this.#{{.DomainCamelL}}Service.update{{.DomainU}}({{"{"}} {{.DomainCamelL}}Id, body {{"}"}})),
+      onMutate: () => {{"{"}}
+        this.#loadingService.show();
+      {{"}"}},
+      onSuccess: async () => {{"{"}}
+        await this.#qc.invalidateQueries({{"{"}}
+          queryKey: ['{{.DefaultPath}}'],
+        {{"}"}});
+        toast.success('{{.ChineseName}}更新成功');
+      {{"}"}},
+      onError: (error) => {{"{"}}
+        toast.error(handleErrorMessage(error));
+      {{"}"}},
+      onSettled: () => {{"{"}}
+        this.#loadingService.hide();
+      {{"}"}},
+    {{"}"}}));
+
+  deleteMutation = () =>
+    injectMutation(() => ({{"{"}}
+      mutationFn: ({{.DomainCamelL}}Id: number) =>
+        firstValueFrom(this.#{{.DomainCamelL}}Service.delete{{.DomainU}}({{"{"}} {{.DomainCamelL}}Id {{"}"}})),
+      onMutate: () => {{"{"}}
+        this.#loadingService.show();
+      {{"}"}},
+      onSuccess: async () => {{"{"}}
+        await this.#qc.invalidateQueries({{"{"}}
+          queryKey: ['{{.DefaultPath}}'],
+        {{"}"}});
+        toast.success('{{.ChineseName}}刪除成功');
+      {{"}"}},
+      onError: (error) => {{"{"}}
+        toast.error(handleErrorMessage(error));
+      {{"}"}},
+      onSettled: () => {{"{"}}
+        this.#loadingService.hide();
+      {{"}"}},
+    {{"}"}}));
+{{"}"}}

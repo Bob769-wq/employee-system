@@ -5,115 +5,107 @@ import (
 	"unicode"
 )
 
-const (
-	directAppNameKey = 0
-	varTypeKey       = 1
-	dummyKey         = 2
-	dbPrefixKey      = 3
-	directJSONName   = 4
-	directDBName     = 5
-)
+var CurrentTanStackVersion = `@tanstack/angular-query-experimental": "^5.79.0"`
 
 const (
-	noDBPrefix = ""
-	typeString = "string"
-	typeInt    = "int"
-	typeBool   = "bool"
-	typeTime   = "time.Time"
-
 	dbPrefix    = "employee"
 	dbTableName = "employees"
+	dbViewName  = ""
+	defaultPath = "employee"
 )
+
+const (
+	chineseName = "員工"
+)
+
+func rawFieldData() [][]string {
+	// directAppName, varType, dummyKey, dbPrefix, directJSONName, directDBName, withCreate(default yes), withUpdate(default follow withCreate)
+	// sFalse可以控制create, update時是否包含這個欄位
+	// 例如：{"Name", typeString, "", dbPrefix, "", "", sFalse, sFalse},
+	data := [][]string{
+		{"FirstName", typeString, "", noDBPrefix, "", "", "", ""},
+		{"LastName", typeString, "", noDBPrefix, "", "", "", ""},
+		{"NationalID", typeString, "", noDBPrefix, "", "", "", ""},
+		{"Email", typeString, "", noDBPrefix, "", "", "", ""},
+		{"Cellphone", typeString, "", noDBPrefix, "", "", "", ""},
+		{"TownID", typeInt, "", noDBPrefix, "", "", "", ""},
+		{"TownName", typeString, "", noDBPrefix, "", "", sFalse, sFalse},
+		{"PostCode", typeString, "", noDBPrefix, "", "", sFalse, sFalse},
+		{"CityID", typeInt, "", noDBPrefix, "", "", sFalse, sFalse},
+		{"CityName", typeString, "", noDBPrefix, "", "", sFalse, sFalse},
+	}
+
+	// codegen:{regenerate-data}
+
+	return data
+}
 
 func projectFieldsz() [][]string {
 	// directAppName, varType, dummyKey, dbPrefix, directJSONName, directDBName
-	data := [][]string{
-		{"FirstName", typeString, "", noDBPrefix, "", ""},
-		{"LastName", typeString, "", noDBPrefix, "", ""},
-		{"NationalID", typeString, "", noDBPrefix, "", ""},
-		{"Email", typeString, "", noDBPrefix, "", ""},
-		{"Cellphone", typeString, "", noDBPrefix, "", ""},
-	}
-	//data := [][]string{
-	//	{"PurchaseOrderID", typeInt, "", noDBPrefix, "", ""},
-	//	{"Etag", typeInt, "", noDBPrefix, "", ""},
-	//
-	//	{"GrossPaymentPriceMicros", typeInt, "", noDBPrefix, "", ""},
-	//
-	//	{"TransferredPriceMicros", typeInt, "", noDBPrefix, "", ""},
-	//	{"CommissionPriceMicros", typeInt, "", noDBPrefix, "", ""},
-	//	{"ShippingFeeMicros", typeInt, "", noDBPrefix, "", ""},
-	//	{"PaymentFeeMicros", typeInt, "", noDBPrefix, "", ""},
-	//}
-	//data := [][]string{
-	//	{"PurchaseOrderID", typeInt, "", noDBPrefix, "", "purchase_order_id"},
-	//	{"ShopID", typeInt, "", noDBPrefix, "", "shop_id"},
-	//	{"ProductSKUID", typeInt, "", noDBPrefix, "", "product_sku_id"},
-	//	{"ProductID", typeInt, "", noDBPrefix, "", "product_id"},
-	//	{"ProductName", typeString, "", noDBPrefix, "", "product_name"},
-	//	{"ProductFeaturedImage", typeString, "", noDBPrefix, "", "product_featured_image"},
-	//	{"ProductFirstOptionID", typeInt, "", noDBPrefix, "", "product_first_option_id"},
-	//	{"ProductFirstOptionName", typeString, "", noDBPrefix, "", "product_first_option_name"},
-	//	{"ProductFirstOptionChoiceID", typeInt, "", noDBPrefix, "", "product_first_option_choice_id"},
-	//	{"ProductFirstOptionChoiceValue", typeString, "", noDBPrefix, "", "product_first_option_choice_value"},
-	//	{"ProductSecondOptionID", typeInt, "", noDBPrefix, "", "product_second_option_id"},
-	//	{"ProductSecondOptionName", typeString, "", noDBPrefix, "", "product_second_option_name"},
-	//	{"ProductSecondOptionChoiceID", typeInt, "", noDBPrefix, "", "product_second_option_choice_id"},
-	//	{"ProductSecondOptionChoiceValue", typeString, "", noDBPrefix, "", "product_second_option_choice_value"},
-	//	{"Quantity", typeInt, "", noDBPrefix, "", "quantity"},
-	//	{"UnitPriceMicros", typeInt, "", noDBPrefix, "", "unit_price_1000000x"},
-	//	{"TotalPriceMicros", typeInt, "", noDBPrefix, "", "total_price_1000000x"},
-	//	{"AddOnDiscountEventID", typeInt, "", noDBPrefix, "", "add_on_discount_event_id"},
-	//	{"AddOnGiftEventID", typeInt, "", noDBPrefix, "", "add_on_gift_event_id"},
-	//	{"BundleEventID", typeInt, "", noDBPrefix, "", "bundle_event_id"},
-	//	{"DiscountEventID", typeInt, "", noDBPrefix, "", "discount_event_id"},
-	//}
-	//data := [][]string{
-	//	{"ShopID", typeInt, "", noDBPrefix, camelStyle("shopID"), "shop_id"},
-	//	{"CartID", typeInt, "", noDBPrefix, camelStyle("CartID"), "cart_id"},
-	//	{"CustomerID", typeInt, "", noDBPrefix, camelStyle("CustomerID"), "customer_id"},
-	//	{"PaymentRecordID", typeInt, "", noDBPrefix, camelStyle("PaymentRecordID"), "payment_record_id"},
-	//
-	//	{"TotalCompareAtPriceMicros", typeInt, "", noDBPrefix, camelStyle("TotalCompareAtPriceMicros"), "total_compare_at_price_1000000x"},
-	//	{"TotalProductPriceMicros", typeInt, "", noDBPrefix, camelStyle("TotalProductPriceMicros"), "total_product_price_1000000x"},
-	//	{"TotalDiscountPriceMicros", typeInt, "", noDBPrefix, camelStyle("TotalDiscountPriceMicros"), "total_discount_price_1000000x"},
-	//	{"TotalBundleSavedPriceMicros", typeInt, "", noDBPrefix, camelStyle("TotalBundleSavedPriceMicros"), "total_bundle_saved_price_1000000x"},
-	//
-	//	{"TotalShippingFeeMicros", typeInt, "", noDBPrefix, camelStyle("TotalShippingFeeMicros"), "total_shipping_fee_1000000x"},
-	//	{"TotalSavedShippingFeeMicros", typeInt, "", noDBPrefix, camelStyle("TotalSavedShippingFeeMicros"), "total_saved_shipping_fee_1000000x"},
-	//	{"TotalPriceWithFeesMicros", typeInt, "", noDBPrefix, camelStyle("TotalPriceWithFeesMicros"), "total_price_with_fees_1000000x"},
-	//	{"TotalPaymentPriceMicros", typeInt, "", noDBPrefix, camelStyle("TotalPaymentPriceMicros"), "total_payment_price_1000000x"},
-	//
-	//	{"TotalCouponSavedPriceMicros", typeInt, "", noDBPrefix, camelStyle("TotalCouponSavedPriceMicros"), "total_coupon_saved_price_1000000x"},
-	//}
-	//data := [][]string{
-	//	{"AddOnEventID", typeInt, "", noDBPrefix, "addOnEventId", "add_on_event_id"},
-	//	{"ShopID", typeTime, "", noDBPrefix, "shopId", "shop_id"},
-	//	{"AddOnEventProductType", typeString, "", noDBPrefix, "addOnEventProductType", "add_on_event_product_type"},
-	//	{"ProductID", typeInt, "", noDBPrefix, "productId", "product_id"},
-	//	{"ProductSKUID", typeInt, "", noDBPrefix, "productSKUId", "product_sku_id"},
-	//	{"IsEffective", typeBool, "", noDBPrefix, "isEffective", "is_effective"},
-	//	{"EventPriceMicros", typeInt, "", noDBPrefix, "eventPriceMicros", "event_price_1000000x"},
-	//	{"MaxQuantity", typeInt, "", noDBPrefix, "maxQuantity", "max_quantity"},
-	//}
+	data := rawFieldData()
 
 	for i := range data {
 		if data[i][directJSONName] == "" {
 			data[i][directJSONName] = camelStyle(data[i][directAppNameKey])
 		}
 		if data[i][directDBName] == "" {
-			data[i][directDBName] = psqlStyle(data[i][directAppNameKey])
+			if data[i][dbPrefixKey] == "" {
+				data[i][directDBName] = psqlStyle(data[i][directAppNameKey])
+			} else {
+				data[i][directDBName] = data[i][dbPrefixKey] + "_" + psqlStyle(data[i][directAppNameKey])
+			}
 		}
 	}
 
 	return data
 }
 
-func patchPointerTypeFields(data [][]string) [][]string {
+func getDBViewName() string {
+	if dbViewName != "" {
+		return dbViewName
+	} else {
+		return dbTableName
+	}
+}
+
+func patchUpdateTypeFields(data [][]string) [][]string {
 	for _, v := range data {
 		v[varTypeKey] = "*" + v[varTypeKey]
 	}
 	return data
+}
+
+func putUpdateTypeFields(data [][]string) [][]string {
+	result := make([][]string, 0, len(data))
+	for i := range data {
+		// 如果沒有指定，那就follow withCreateKey
+		if data[i][withUpdateKey] == sDefault {
+			if data[i][withCreateKey] == sFalse {
+				// 如果withCreateKey是sFalse，那就不需要這筆資料
+				continue
+			}
+		} else {
+			// 如果有指定，那就follow withUpdateKey
+			if data[i][withUpdateKey] == sFalse {
+				// 如果withUpdateKey是sFalse，那就不需要這筆資料
+				continue
+			}
+		}
+		result = append(result, data[i])
+	}
+	return result
+}
+
+func createTypeFields(data [][]string) [][]string {
+	result := make([][]string, 0, len(data))
+	for i := range data {
+		if data[i][withCreateKey] == sFalse {
+			// 如果withCreateKey是sFalse，那就不需要這筆資料
+			continue
+		}
+		result = append(result, data[i])
+	}
+	return result
 }
 
 func coreFieldsz(data [][]string) []string {
@@ -144,11 +136,75 @@ func dbFieldsz(data [][]string, otm bool) []string {
 			dbResult = `db:"` + dbResult + `"`
 		}
 		dbResult = "`" + dbResult + "`"
+		var dbType string
+		if _, ok := arrayTypes[v[varTypeKey]]; ok {
+			dbType = arrayTypes[v[varTypeKey]]
+		} else {
+			dbType = v[varTypeKey]
+		}
 		resul := make([]string, 3)
 		resul[0] = v[directAppNameKey]
-		resul[1] = v[varTypeKey]
+		resul[1] = dbType
 		resul[2] = dbResult
 		result = append(result, strings.Join(resul, "  "))
+	}
+	return result
+}
+
+func sqlQueryFieldsz(data [][]string) []string {
+	result := make([]string, 0, len(data))
+	for _, v := range data {
+		dbResult := strings.ToLower(v[directAppNameKey])
+
+		if v[dbPrefixKey] != "" {
+			dbResult = v[dbPrefixKey] + "_" + dbResult
+		}
+
+		if v[directDBName] != "" {
+			dbResult = v[directDBName]
+		}
+		dbResult = dbResult + `,`
+		result = append(result, dbResult)
+	}
+	// remove last comma
+	if len(result) > 0 {
+		result[len(result)-1] = result[len(result)-1][0 : len(result[len(result)-1])-1]
+	}
+	return result
+}
+
+func sqlUpdateFieldsz(data [][]string) []string {
+	result := make([]string, 0, len(data))
+	var maxLen int // 為了排版美觀用途，取出最長字串來對齊
+	for _, v := range data {
+		lenText := strings.ToLower(v[directAppNameKey])
+		if v[dbPrefixKey] != "" {
+			lenText = v[dbPrefixKey] + "_" + lenText
+		}
+		if v[directDBName] != "" {
+			lenText = v[directDBName]
+		}
+		if len(lenText) > maxLen {
+			maxLen = len(lenText)
+		}
+	}
+
+	for _, v := range data {
+		dbResult := strings.ToLower(v[directAppNameKey])
+
+		if v[dbPrefixKey] != "" {
+			dbResult = v[dbPrefixKey] + "_" + dbResult
+		}
+
+		if v[directDBName] != "" {
+			dbResult = v[directDBName]
+		}
+		dbResult = dbResult + strings.Repeat(" ", maxLen-len(dbResult)) + ` = :` + dbResult + `,`
+		result = append(result, dbResult)
+	}
+	// remove last comma
+	if len(result) > 0 {
+		result[len(result)-1] = result[len(result)-1][0 : len(result[len(result)-1])-1]
 	}
 	return result
 }
@@ -157,7 +213,7 @@ func jsonFieldsz(data [][]string) []string {
 	result := make([]string, 0, len(data))
 	for _, v := range data {
 		jsonResult := strings.ToLower(v[directAppNameKey][0:1]) + v[directAppNameKey][1:]
-		if jsonResult[len(jsonResult)-2:] == "ItemID" {
+		if jsonResult[len(jsonResult)-2:] == "ID" {
 			jsonResult = jsonResult[0:len(jsonResult)-2] + "Id"
 		}
 		if v[directJSONName] != "" {
@@ -170,6 +226,32 @@ func jsonFieldsz(data [][]string) []string {
 		resul[1] = v[varTypeKey]
 		resul[2] = jsonResult
 		result = append(result, strings.Join(resul, "  "))
+	}
+	return result
+}
+
+func httpFieldsz(data [][]string) []string {
+	result := make([]string, 0, len(data))
+	for i, v := range data {
+		jsonResult := strings.ToLower(v[directAppNameKey][0:1]) + v[directAppNameKey][1:]
+		if jsonResult[len(jsonResult)-2:] == "ID" {
+			jsonResult = jsonResult[0:len(jsonResult)-2] + "Id"
+		}
+		if v[directJSONName] != "" {
+			jsonResult = v[directJSONName]
+		}
+		jsonResult = `"` + jsonResult + `":`
+		resul := make([]string, 2)
+		// resul[0] = v[directAppNameKey]
+		// resul[1] = v[varTypeKey]
+		resul[0] = jsonResult
+		if i != len(data) {
+			resul[1] = httpTypeValues[v[varTypeKey]] + `,`
+		} else {
+			// 最後一個元素不需要逗號
+			resul[1] = httpTypeValues[v[varTypeKey]]
+		}
+		result = append(result, strings.Join(resul, " "))
 	}
 	return result
 }
@@ -209,15 +291,29 @@ func coreCreateFunctionz(data [][]string, abbr string) []string {
 	return toStructFields(data, abbr)
 }
 
-func coreUpdateFunctionz(data [][]string, abbr string) []string {
-	return toPointerUpdateIfNotNilFields(data, abbr)
+func corePatchUpdateFunctionz(data [][]string, abbr string) []string {
+	return toPatchUpdateIfNotNilFields(data, abbr)
 }
 
-func toPointerUpdateIfNotNilFields(data [][]string, abbr string) []string {
+func toPatchUpdateIfNotNilFields(data [][]string, abbr string) []string {
 	result := make([]string, 0, len(data))
 	abbrU := strings.ToUpper(abbr[0:1]) + abbr[1:]
 	for _, v := range data {
 		tempString := "if u" + abbrU + "." + v[directAppNameKey] + "!=nil{ " + abbr + "." + v[directAppNameKey] + "= *u" + abbrU + "." + v[directAppNameKey] + "}"
+		result = append(result, tempString)
+	}
+	return result
+}
+
+func corePutUpdateFunctionz(data [][]string, abbr string) []string {
+	return toPutUpdateIfNotNilFields(data, abbr)
+}
+
+func toPutUpdateIfNotNilFields(data [][]string, abbr string) []string {
+	result := make([]string, 0, len(data))
+	abbrU := strings.ToUpper(abbr[0:1]) + abbr[1:]
+	for _, v := range data {
+		tempString := abbr + "." + v[directAppNameKey] + "= u" + abbrU + "." + v[directAppNameKey]
 		result = append(result, tempString)
 	}
 	return result

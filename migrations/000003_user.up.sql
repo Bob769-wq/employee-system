@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS employees
     national_id text NOT NULL CHECK (national_id <> ''),
     email       text NOT NULL CHECK (email <> ''),
     cellphone   text NOT NULL CHECK (cellphone ~ '^\d{10}$'),
+    town_id     int  NOT NULL REFERENCES city_towns (town_id),
     created_at  timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at  timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

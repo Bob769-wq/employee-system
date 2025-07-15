@@ -1,0 +1,220 @@
+openapi: 3.0.3
+info:
+  title: Go API
+  description: A simple API developed in Go
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:3000/v1'
+paths:
+  # {{.DomainU}}API
+  /{{.DefaultPath}}:
+    get:
+      tags:
+        - {{.DomainU}}API
+      operationId: get{{.DomainPluralU}}{{if .WithPagination}}
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/pageSizeParam'
+        - $ref: '#/components/parameters/orderByParam'{{end}}
+      responses:
+        200:
+          description: A list of {{.DomainPlural}}
+          content:
+            application/json:
+              schema:{{if .WithPagination}}
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedCollection'
+                  - type: object
+                    required:
+                      - items
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/{{.DomainU}}'{{else}}
+                type: array
+                items:
+                  $ref: '#/components/schemas/{{.DomainU}}'
+                {{end}}
+    post:
+      tags:
+        - {{.DomainU}}API
+      operationId: create{{.DomainU}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/{{.DomainU}}CreateInput'
+      responses:
+        201:
+          description: The created {{.DomainL}}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/{{.DomainU}}'
+  /{{.DefaultPath}}/{{"{"}}{{.DomainCamelL}}Id}:
+    get:
+      tags:
+        - {{.DomainU}}API
+      operationId: get{{.DomainU}}
+      parameters:
+        - name: {{.DomainCamelL}}Id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The id of the {{.DomainL}}
+      responses:
+        200:
+          description: A {{.DomainL}}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/{{.DomainU}}'
+    put:
+      tags:
+        - {{.DomainU}}API
+      operationId: update{{.DomainU}}
+      parameters:
+        - name: {{.DomainCamelL}}Id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The id of the {{.DomainL}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/{{.DomainU}}UpdateInput'
+      responses:
+        200:
+          description: The updated {{.DomainL}}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/{{.DomainU}}'
+    delete:
+      tags:
+        - {{.DomainU}}API
+      operationId: delete{{.DomainU}}
+      parameters:
+        - name: {{.DomainCamelL}}Id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The id of the {{.DomainL}}
+      responses:
+        204:
+          description: No Content
+
+components:
+  parameters:
+    pageParam:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+      description: The page number
+    pageSizeParam:
+      name: pageSize
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+      description: The page size
+    orderByParam:
+      name: orderBy
+      in: query
+      required: false
+      schema:
+        type: string
+      description: The field to order by
+  schemas:
+
+    # {{.DomainU}}API
+    {{.DomainU}}:
+      type: object
+      required:
+        - id
+        {{- range .YamlDisplayRequired }}
+        - {{.}}
+        {{- end}}
+        {{- if .NeedCUTime}}
+        - createdAt
+        - updatedAt
+        {{- end}}
+        {{- if .WithOptConcur}}
+        - etag
+        {{end}}
+      properties:
+        id:
+          type: integer
+        {{- range .YamlDisplayProperties }}
+        {{.}}
+        {{- end}}
+        {{- if .NeedCUTime}}
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        {{- end}}
+        {{- if .WithOptConcur}}
+        etag:
+          type: integer
+        {{end}}
+    {{.DomainU}}CreateInput:
+      type: object
+      required:
+        {{- range .YamlCreateRequired }}
+        - {{.}}
+        {{- end}}
+      properties:
+        {{- range .YamlCreateProperties }}
+        {{.}}
+        {{- end}}
+    {{.DomainU}}UpdateInput:
+      type: object
+      required:
+      {{- if .WithOptConcur}}
+        - etag
+      {{- end}}
+      {{- range .YamlUpdateRequired }}
+        - {{.}}
+      {{- end}}
+      properties:
+        {{- range .YamlUpdateProperties }}
+        {{.}}
+        {{- end}}
+      {{- if .WithOptConcur}}
+        etag:
+          type: integer
+      {{- end}}
+
+    # Util
+    PaginatedCollection:
+      description: a generic type for paginated results
+      required:
+        - total
+        - page
+        - pageSize
+      properties:
+        total:
+          type: integer
+        page:
+          type: integer
+        pageSize:
+          type: integer
+        # Note: `items` must be defined in the operation, otherwise the generated typescript code will not work properly
+

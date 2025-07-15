@@ -1,0 +1,246 @@
+openapi: 3.0.3
+info:
+  title: Go API
+  description: A simple API developed in Go
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:3000/v1'
+paths:
+  # EmployeeAPI
+  /employees:
+    get:
+      tags:
+        - EmployeeAPI
+      operationId: getEmployees
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/pageSizeParam'
+        - $ref: '#/components/parameters/orderByParam'
+      responses:
+        200:
+          description: A list of employees
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedCollection'
+                  - type: object
+                    required:
+                      - items
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Employee'
+    post:
+      tags:
+        - EmployeeAPI
+      operationId: createEmployee
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeCreateInput'
+      responses:
+        201:
+          description: The created employee
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+  /employees/{employeeId}:
+    get:
+      tags:
+        - EmployeeAPI
+      operationId: getEmployee
+      parameters:
+        - name: employeeId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The id of the employee
+      responses:
+        200:
+          description: A employee
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+    put:
+      tags:
+        - EmployeeAPI
+      operationId: updateEmployee
+      parameters:
+        - name: employeeId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The id of the employee
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeUpdateInput'
+      responses:
+        200:
+          description: The updated employee
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+    delete:
+      tags:
+        - EmployeeAPI
+      operationId: deleteEmployee
+      parameters:
+        - name: employeeId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The id of the employee
+      responses:
+        204:
+          description: No Content
+
+components:
+  parameters:
+    pageParam:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+      description: The page number
+    pageSizeParam:
+      name: pageSize
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+      description: The page size
+    orderByParam:
+      name: orderBy
+      in: query
+      required: false
+      schema:
+        type: string
+      description: The field to order by
+  schemas:
+
+    # EmployeeAPI
+    Employee:
+      type: object
+      required:
+        - id
+        - firstName
+        - lastName
+        - nationalId
+        - email
+        - cellphone
+        - townId
+        - townName
+        - postCode
+        - cityId
+        - cityName
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: integer
+        firstName:
+          type: string
+        lastName:
+          type: string
+        nationalId:
+          type: string
+        email:
+          type: string
+        cellphone:
+          type: string
+        townId:
+          type: integer
+        townName:
+          type: string
+        postCode:
+          type: string
+        cityId:
+          type: integer
+        cityName:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    EmployeeCreateInput:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - nationalId
+        - email
+        - cellphone
+        - townId
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        nationalId:
+          type: string
+        email:
+          type: string
+        cellphone:
+          type: string
+        townId:
+          type: integer
+    EmployeeUpdateInput:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - nationalId
+        - email
+        - cellphone
+        - townId
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        nationalId:
+          type: string
+        email:
+          type: string
+        cellphone:
+          type: string
+        townId:
+          type: integer
+
+    # Util
+    PaginatedCollection:
+      description: a generic type for paginated results
+      required:
+        - total
+        - page
+        - pageSize
+      properties:
+        total:
+          type: integer
+        page:
+          type: integer
+        pageSize:
+          type: integer
+        # Note: `items` must be defined in the operation, otherwise the generated typescript code will not work properly
+

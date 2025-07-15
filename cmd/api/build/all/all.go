@@ -2,12 +2,15 @@ package all
 
 import (
 	"github.com/mayainfo/employee-practice-be/internal/app/domain/authapi"
+	"github.com/mayainfo/employee-practice-be/internal/app/domain/employeeapi"
 	"github.com/mayainfo/employee-practice-be/internal/app/domain/fileapi"
 	"github.com/mayainfo/employee-practice-be/internal/app/domain/healthapi"
 	"github.com/mayainfo/employee-practice-be/internal/app/domain/townapi"
 	"github.com/mayainfo/employee-practice-be/internal/app/sdk/mux"
 	"github.com/mayainfo/employee-practice-be/internal/business/domain/auth"
 	"github.com/mayainfo/employee-practice-be/internal/business/domain/auth/stores/authdb"
+	"github.com/mayainfo/employee-practice-be/internal/business/domain/employee"
+	"github.com/mayainfo/employee-practice-be/internal/business/domain/employee/stores/employeedb"
 	"github.com/mayainfo/employee-practice-be/internal/business/domain/file"
 	"github.com/mayainfo/employee-practice-be/internal/business/domain/file/stores/filedb"
 	"github.com/mayainfo/employee-practice-be/internal/business/domain/notification"
@@ -27,6 +30,7 @@ func (add) Add(app *web.App, cfg mux.Config) {
 	authCore := auth.NewCore(authdb.NewStore(cfg.DB), cfg.JWTKey)
 	notifyCore := notification.NewCore(cfg.Mailer, cfg.FrontendOrigin)
 	townCore := town.NewCore(towndb.NewStore(cfg.DB))
+	employeeCore := employee.NewCore(employeedb.NewStore(cfg.DB))
 	healthapi.Routes(app, healthapi.Config{
 		Log: cfg.Log,
 		DB:  cfg.DB,
@@ -52,5 +56,10 @@ func (add) Add(app *web.App, cfg mux.Config) {
 		Log:  cfg.Log,
 		TxM:  cfg.TxM,
 		Town: townCore,
+	})
+	employeeapi.Routes(app, employeeapi.Config{
+		Log:      cfg.Log,
+		TxM:      cfg.TxM,
+		Employee: employeeCore,
 	})
 }

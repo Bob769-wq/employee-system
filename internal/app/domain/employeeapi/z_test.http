@@ -1,0 +1,34 @@
+@NOW = 2025-06-24T04:51:21Z
+@LATER = 2025-06-24T04:52:21Z
+@baseUrl = http://localhost:3000/v1
+@pattern = employees
+
+### Get
+GET {{baseUrl}}/{{pattern}}
+
+### Create
+POST {{baseUrl}}/{{pattern}}
+
+{
+    "firstName": "string",
+    "lastName": "string",
+    "nationalId": "A123456789",
+    "email": "abseed@gmail.com",
+    "cellphone": "0912345678",
+    "townId": 1
+}
+
+### Update
+PUT {{baseUrl}}/{{pattern}}/1
+
+{
+    "firstName": "string",
+    "lastName": "string",
+    "nationalId": "A123456789",
+    "email": "abseed@gmail.com",
+    "cellphone": "0912345678",
+    "townId": 2
+}
+
+### Delete
+DELETE {{baseUrl}}/{{pattern}}/1

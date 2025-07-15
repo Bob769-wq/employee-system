@@ -20,7 +20,10 @@
             "input": "web/apps/app/public"
           }
         ],
-        "styles": ["web/apps/app/src/styles.css"]
+        "styles": [
+          "@angular/material/prebuilt-themes/azure-blue.css",
+          "web/apps/app/src/styles.css"
+        ]
       },
       "configurations": {
         "production": {

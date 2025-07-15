@@ -16,7 +16,7 @@ type Config struct {
 	Town *town.Core
 }
 
-func CustomerRoutes(app *web.App, cfg Config) {
+func Routes(app *web.App, cfg Config) {
 	const version = "v1"
 
 	hdl := newHandlers(cfg.Log, cfg.TxM, cfg.Town)

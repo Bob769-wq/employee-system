@@ -11,7 +11,7 @@ const (
 	dbPrefix    = "employee"
 	dbTableName = "employees"
 	dbViewName  = "v_employees"
-	defaultPath = "employee"
+	defaultPath = "employees"
 )
 
 const (

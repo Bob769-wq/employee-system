@@ -1,24 +1,122 @@
 openapi: 3.0.3
 info:
-  title: Go API
-  description: A simple API developed in Go
+  title: City API
+  description: City API
   version: 1.0.0
 servers:
   - url: 'http://localhost:3000/v1'
+    description: Development server
+  - url: 'http://localhost:8080/v1'
+    description: Mock server
 paths:
-  /healthz:
+  # TownAPI
+  /cities:
     get:
-      summary: Health check
+      tags:
+        - TownAPI
+      operationId: getCities
       responses:
         200:
-          description: OK
+          description: A list of cities
           content:
             application/json:
               schema:
-                type: object
-                required:
-                  - status
-                properties:
-                  status:
-                    type: string
-                    example: ok
+                type: array
+                items:
+                  $ref: '#/components/schemas/City'
+  /cities/{cityId}/towns:
+    get:
+      tags:
+        - TownAPI
+      operationId: getTowns
+      parameters:
+        - name: cityId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The id of the city
+      responses:
+        200:
+          description: A city
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Town'
+
+
+components:
+  schemas:
+    # TownAPI
+    City:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    Town:
+      type: object
+      required:
+        - id
+        - name
+        - city
+        - postCode
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        city:
+          $ref: '#/components/schemas/City'
+        postCode:
+          type: string
+
+    # Util
+    PaginatedCollection:
+      description: a generic type for paginated results
+      required:
+        - total
+        - page
+        - pageSize
+      properties:
+        total:
+          type: integer
+        page:
+          type: integer
+        pageSize:
+          type: integer
+        # Note: `items` must be defined in the operation, otherwise the generated typescript code will not work properly
+
+  parameters:
+    pageParam:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+      description: The page number
+    pageSizeParam:
+      name: pageSize
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+      description: The page size
+    orderByParam:
+      name: orderBy
+      in: query
+      required: false
+      schema:
+        type: string
+      description: The field to order by

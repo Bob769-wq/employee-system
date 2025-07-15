@@ -10,7 +10,7 @@ var CurrentTanStackVersion = `@tanstack/angular-query-experimental": "^5.79.0"`
 const (
 	dbPrefix    = "employee"
 	dbTableName = "employees"
-	dbViewName  = ""
+	dbViewName  = "v_employees"
 	defaultPath = "employee"
 )
 

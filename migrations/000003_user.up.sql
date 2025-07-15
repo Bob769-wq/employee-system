@@ -11,6 +11,25 @@ CREATE TABLE IF NOT EXISTS employees
     updated_at  timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE OR REPLACE VIEW v_employees AS
+(
+    SELECT e.employee_id,
+           e.first_name,
+           e.last_name,
+           e.national_id,
+           e.email,
+           e.cellphone,
+           e.town_id,
+           c.town_name,
+           c.city_id,
+           c.city_name,
+           c.post_code,
+           e.created_at,
+           e.updated_at
+    FROM employees e
+    LEFT JOIN m_v_towns c ON e.town_id = c.town_id
+);
+
 CREATE TYPE user_types AS ENUM ('superAdmin', 'admin', 'staff', 'user');
 CREATE TABLE IF NOT EXISTS users
 (

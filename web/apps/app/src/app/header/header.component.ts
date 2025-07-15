@@ -23,11 +23,7 @@ import { PrimaryButtonComponent } from '../shared/primary-button.component';
     >
       <div class="flex gap-4">
         <button mat-icon-button routerLink="/">
-          <mat-icon
-            aria-hidden="false"
-            aria-label="Example home icon"
-            fontIcon="home"
-          ></mat-icon>
+          <mat-icon>home</mat-icon>
         </button>
         <app-button routerLink="/" label="新增人員" />
       </div>

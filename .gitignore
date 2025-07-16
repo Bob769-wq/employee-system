@@ -57,5 +57,3 @@ Thumbs.db
 .nx/installation
 vite.config.*.timestamp*
 vitest.config.*.timestamp*
-
-web/apps/app/src/app/shared/data-access/api*

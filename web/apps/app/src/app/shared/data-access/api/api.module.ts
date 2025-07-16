@@ -12,6 +12,7 @@ import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
 import { TownApiService } from './services/town-api.service';
+import { EmployeeApiService } from './services/employee-api.service';
 
 /**
  * Module that provides all services and configuration.
@@ -20,7 +21,7 @@ import { TownApiService } from './services/town-api.service';
   imports: [],
   exports: [],
   declarations: [],
-  providers: [TownApiService, ApiConfiguration],
+  providers: [TownApiService, EmployeeApiService, ApiConfiguration],
 })
 export class ApiModule {
   static forRoot(

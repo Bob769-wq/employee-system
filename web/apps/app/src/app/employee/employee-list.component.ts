@@ -66,7 +66,7 @@ import { EmployeesQueryService } from './data-access/employee.query';
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr
           mat-row
-          class="hover:bg-gray-100"
+          class="cursor-pointer hover:bg-gray-100"
           routerLink="/employees/{{ row.id }}/edit"
           *matRowDef="let row; columns: displayedColumns"
         ></tr>

@@ -147,11 +147,7 @@ components:
         - nationalId
         - email
         - cellphone
-        - townId
-        - townName
-        - postCode
-        - cityId
-        - cityName
+        - town
         - createdAt
         - updatedAt
       properties:
@@ -167,16 +163,30 @@ components:
           type: string
         cellphone:
           type: string
-        townId:
-          type: integer
-        townName:
-          type: string
-        postCode:
-          type: string
-        cityId:
-          type: integer
-        cityName:
-          type: string
+        town:
+          type: object
+          required:
+            - id
+            - name
+            - postCode
+            - city
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            postCode:
+              type: string
+            city:
+              type: object
+              required:
+                - id
+                - name
+              properties:
+                id:
+                  type: integer
+                name:
+                  type: string
         createdAt:
           type: string
           format: date-time

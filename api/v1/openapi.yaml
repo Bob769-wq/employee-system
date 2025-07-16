@@ -45,7 +45,106 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Town'
-
+  # EmployeeAPI
+  /employees:
+    get:
+      tags:
+        - EmployeeAPI
+      operationId: getEmployees
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/pageSizeParam'
+        - $ref: '#/components/parameters/orderByParam'
+      responses:
+        200:
+          description: A list of employees
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedCollection'
+                  - type: object
+                    required:
+                      - items
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Employee'
+    post:
+      tags:
+        - EmployeeAPI
+      operationId: createEmployee
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeCreateInput'
+      responses:
+        201:
+          description: The created employee
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+  /employees/{employeeId}:
+    get:
+      tags:
+        - EmployeeAPI
+      operationId: getEmployee
+      parameters:
+        - name: employeeId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The id of the employee
+      responses:
+        200:
+          description: A employee
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+    put:
+      tags:
+        - EmployeeAPI
+      operationId: updateEmployee
+      parameters:
+        - name: employeeId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The id of the employee
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeUpdateInput'
+      responses:
+        200:
+          description: The updated employee
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+    delete:
+      tags:
+        - EmployeeAPI
+      operationId: deleteEmployee
+      parameters:
+        - name: employeeId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The id of the employee
+      responses:
+        204:
+          description: No Content
 
 components:
   schemas:
@@ -76,7 +175,107 @@ components:
           $ref: '#/components/schemas/City'
         postCode:
           type: string
+    # EmployeeAPI
+    Employee:
+      type: object
+      required:
+        - id
+        - firstName
+        - lastName
+        - nationalId
+        - email
+        - cellphone
+        - town
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: integer
+        firstName:
+          type: string
+        lastName:
+          type: string
+        nationalId:
+          type: string
+        email:
+          type: string
+        cellphone:
+          type: string
+        town:
+          type: object
+          required:
+            - id
+            - name
+            - postCode
+            - city
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            postCode:
+              type: string
+            city:
+              type: object
+              required:
+                - id
+                - name
+              properties:
+                id:
+                  type: integer
+                name:
+                  type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
 
+    EmployeeCreateInput:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - nationalId
+        - email
+        - cellphone
+        - townId
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        nationalId:
+          type: string
+        email:
+          type: string
+        cellphone:
+          type: string
+        townId:
+          type: integer
+    EmployeeUpdateInput:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - nationalId
+        - email
+        - cellphone
+        - townId
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        nationalId:
+          type: string
+        email:
+          type: string
+        cellphone:
+          type: string
+        townId:
+          type: integer
     # Util
     PaginatedCollection:
       description: a generic type for paginated results

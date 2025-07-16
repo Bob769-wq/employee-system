@@ -10,14 +10,12 @@ import {
 } from '@angular/material/table';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 
-import { PrimaryButtonComponent } from '../shared/primary-button.component';
 import { EmployeesQueryService } from './data-access/employee.query';
 
 @Component({
   selector: 'app-employee-list',
   imports: [
     CommonModule,
-    PrimaryButtonComponent,
     MatTableModule,
     MatHeaderCell,
     MatCell,
@@ -56,6 +54,13 @@ import { EmployeesQueryService } from './data-access/employee.query';
           <td mat-cell *matCellDef="let element">{{ element.cellphone }}</td>
         </ng-container>
 
+        <ng-container matColumnDef="address">
+          <th mat-header-cell *matHeaderCellDef>縣市</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.town.city.name + element.town.name }}
+          </td>
+        </ng-container>
+
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>
@@ -75,5 +80,12 @@ export class EmployeeListComponent {
     return this.employeeQuery.data()?.items || [];
   }
 
-  displayedColumns = ['id', 'name', 'nationalId', 'email', 'cellphone'];
+  displayedColumns = [
+    'id',
+    'name',
+    'nationalId',
+    'email',
+    'cellphone',
+    'address',
+  ];
 }

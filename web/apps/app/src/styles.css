@@ -3,3 +3,7 @@
 @tailwind utilities;
 
 /* You can add global styles to this file, and also import other style files */
+:root {
+  --mat-form-field-container-vertical-padding: 6px;
+  --mat-form-field-container-height: 32px;
+}

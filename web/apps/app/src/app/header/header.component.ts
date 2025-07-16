@@ -25,7 +25,7 @@ import { PrimaryButtonComponent } from '../shared/primary-button.component';
         <button mat-icon-button routerLink="/">
           <mat-icon>home</mat-icon>
         </button>
-        <app-button routerLink="/" label="新增人員" />
+        <app-button routerLink="/employees/new/edit" label="新增人員" />
       </div>
 
       <app-primary-button [label]="'Click'" />

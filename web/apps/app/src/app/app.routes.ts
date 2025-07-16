@@ -1,11 +1,19 @@
 import { Route } from '@angular/router';
 
-import { EmployeeListComponent } from './employee/employee-list.component';
-
 export const appRoutes: Route[] = [
   {
     path: '',
     pathMatch: 'full',
-    component: EmployeeListComponent,
+    loadComponent: () =>
+      import('./employee/employee-list.component').then(
+        (m) => m.EmployeeListComponent,
+      ),
+  },
+  {
+    path: 'employees/:employeeId/edit',
+    loadComponent: () =>
+      import('./employee/employee-edit.component').then(
+        (m) => m.EmployeeEditComponent,
+      ),
   },
 ];

@@ -53,9 +53,9 @@ export class EmployeesQueryService {
       onMutate: () => {
         this.#loadingService.show();
       },
-      onSuccess: async () => {
+      onSuccess: async (response) => {
         await this.#qc.invalidateQueries({
-          queryKey: ['employees'],
+          queryKey: ['employees', response.id],
         });
         toast.success('員工新增成功');
       },

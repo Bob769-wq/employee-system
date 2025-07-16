@@ -11,13 +11,13 @@ export interface Employee {
   lastName: string;
   nationalId: string;
   town: {
-    id: number;
-    name: string;
-    postCode: string;
-    city: {
-      id: number;
-      name: string;
-    };
-  };
+'id': number;
+'name': string;
+'postCode': string;
+'city': {
+'id': number;
+'name': string;
+};
+};
   updatedAt: string;
 }

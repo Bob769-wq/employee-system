@@ -12,35 +12,29 @@ import { Employee } from '../../models/employee';
 import { EmployeeUpdateInput } from '../../models/employee-update-input';
 
 export interface UpdateEmployee$Params {
-  /**
-   * The id of the employee
-   */
+
+/**
+ * The id of the employee
+ */
   employeeId: number;
-  body: EmployeeUpdateInput;
+      body: EmployeeUpdateInput
 }
 
-export function updateEmployee(
-  http: HttpClient,
-  rootUrl: string,
-  params: UpdateEmployee$Params,
-  context?: HttpContext,
-): Observable<StrictHttpResponse<Employee>> {
+export function updateEmployee(http: HttpClient, rootUrl: string, params: UpdateEmployee$Params, context?: HttpContext): Observable<StrictHttpResponse<Employee>> {
   const rb = new RequestBuilder(rootUrl, updateEmployee.PATH, 'put');
   if (params) {
     rb.path('employeeId', params.employeeId, {});
     rb.body(params.body, 'application/json');
   }
 
-  return http
-    .request(
-      rb.build({ responseType: 'json', accept: 'application/json', context }),
-    )
-    .pipe(
-      filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Employee>;
-      }),
-    );
+  return http.request(
+    rb.build({ responseType: 'json', accept: 'application/json', context })
+  ).pipe(
+    filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
+    map((r: HttpResponse<any>) => {
+      return r as StrictHttpResponse<Employee>;
+    })
+  );
 }
 
 updateEmployee.PATH = '/employees/{employeeId}';

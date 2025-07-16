@@ -12,30 +12,23 @@ import { Employee } from '../../models/employee';
 import { EmployeeCreateInput } from '../../models/employee-create-input';
 
 export interface CreateEmployee$Params {
-  body: EmployeeCreateInput;
+      body: EmployeeCreateInput
 }
 
-export function createEmployee(
-  http: HttpClient,
-  rootUrl: string,
-  params: CreateEmployee$Params,
-  context?: HttpContext,
-): Observable<StrictHttpResponse<Employee>> {
+export function createEmployee(http: HttpClient, rootUrl: string, params: CreateEmployee$Params, context?: HttpContext): Observable<StrictHttpResponse<Employee>> {
   const rb = new RequestBuilder(rootUrl, createEmployee.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');
   }
 
-  return http
-    .request(
-      rb.build({ responseType: 'json', accept: 'application/json', context }),
-    )
-    .pipe(
-      filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Employee>;
-      }),
-    );
+  return http.request(
+    rb.build({ responseType: 'json', accept: 'application/json', context })
+  ).pipe(
+    filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
+    map((r: HttpResponse<any>) => {
+      return r as StrictHttpResponse<Employee>;
+    })
+  );
 }
 
 createEmployee.PATH = '/employees';

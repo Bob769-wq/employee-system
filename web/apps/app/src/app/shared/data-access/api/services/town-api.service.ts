@@ -33,10 +33,7 @@ export class TownApiService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getCities$Response(
-    params?: GetCities$Params,
-    context?: HttpContext,
-  ): Observable<StrictHttpResponse<Array<City>>> {
+  getCities$Response(params?: GetCities$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<City>>> {
     return getCities(this.http, this.rootUrl, params, context);
   }
 
@@ -46,12 +43,9 @@ export class TownApiService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getCities(
-    params?: GetCities$Params,
-    context?: HttpContext,
-  ): Observable<Array<City>> {
+  getCities(params?: GetCities$Params, context?: HttpContext): Observable<Array<City>> {
     return this.getCities$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<City>>): Array<City> => r.body),
+      map((r: StrictHttpResponse<Array<City>>): Array<City> => r.body)
     );
   }
 
@@ -64,10 +58,7 @@ export class TownApiService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getTowns$Response(
-    params: GetTowns$Params,
-    context?: HttpContext,
-  ): Observable<StrictHttpResponse<Array<Town>>> {
+  getTowns$Response(params: GetTowns$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<Town>>> {
     return getTowns(this.http, this.rootUrl, params, context);
   }
 
@@ -77,12 +68,10 @@ export class TownApiService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getTowns(
-    params: GetTowns$Params,
-    context?: HttpContext,
-  ): Observable<Array<Town>> {
+  getTowns(params: GetTowns$Params, context?: HttpContext): Observable<Array<Town>> {
     return this.getTowns$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<Town>>): Array<Town> => r.body),
+      map((r: StrictHttpResponse<Array<Town>>): Array<Town> => r.body)
     );
   }
+
 }

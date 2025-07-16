@@ -40,6 +40,7 @@ export class EmployeesQueryService {
       queryKey: ['employees', 'detail', employeeId],
       queryFn: () =>
         firstValueFrom(this.#employeeService.getEmployee({ employeeId })),
+      enabled: !!employeeId,
     });
 
   createMutation = () =>

@@ -12,34 +12,26 @@ import { Employee } from '../../models/employee';
 import { PaginatedCollection } from '../../models/paginated-collection';
 
 export interface GetEmployees$Params {
-  /**
-   * The page number
-   */
+
+/**
+ * The page number
+ */
   page?: number;
 
-  /**
-   * The page size
-   */
+/**
+ * The page size
+ */
   pageSize?: number;
 
-  /**
-   * The field to order by
-   */
+/**
+ * The field to order by
+ */
   orderBy?: string;
 }
 
-export function getEmployees(
-  http: HttpClient,
-  rootUrl: string,
-  params?: GetEmployees$Params,
-  context?: HttpContext,
-): Observable<
-  StrictHttpResponse<
-    PaginatedCollection & {
-      items: Array<Employee>;
-    }
-  >
-> {
+export function getEmployees(http: HttpClient, rootUrl: string, params?: GetEmployees$Params, context?: HttpContext): Observable<StrictHttpResponse<PaginatedCollection & {
+'items': Array<Employee>;
+}>> {
   const rb = new RequestBuilder(rootUrl, getEmployees.PATH, 'get');
   if (params) {
     rb.query('page', params.page, {});
@@ -47,20 +39,16 @@ export function getEmployees(
     rb.query('orderBy', params.orderBy, {});
   }
 
-  return http
-    .request(
-      rb.build({ responseType: 'json', accept: 'application/json', context }),
-    )
-    .pipe(
-      filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<
-          PaginatedCollection & {
-            items: Array<Employee>;
-          }
-        >;
-      }),
-    );
+  return http.request(
+    rb.build({ responseType: 'json', accept: 'application/json', context })
+  ).pipe(
+    filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
+    map((r: HttpResponse<any>) => {
+      return r as StrictHttpResponse<PaginatedCollection & {
+      'items': Array<Employee>;
+      }>;
+    })
+  );
 }
 
 getEmployees.PATH = '/employees';

@@ -10,28 +10,22 @@ import { RequestBuilder } from '../../request-builder';
 
 import { City } from '../../models/city';
 
-export interface GetCities$Params {}
+export interface GetCities$Params {
+}
 
-export function getCities(
-  http: HttpClient,
-  rootUrl: string,
-  params?: GetCities$Params,
-  context?: HttpContext,
-): Observable<StrictHttpResponse<Array<City>>> {
+export function getCities(http: HttpClient, rootUrl: string, params?: GetCities$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<City>>> {
   const rb = new RequestBuilder(rootUrl, getCities.PATH, 'get');
   if (params) {
   }
 
-  return http
-    .request(
-      rb.build({ responseType: 'json', accept: 'application/json', context }),
-    )
-    .pipe(
-      filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<City>>;
-      }),
-    );
+  return http.request(
+    rb.build({ responseType: 'json', accept: 'application/json', context })
+  ).pipe(
+    filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
+    map((r: HttpResponse<any>) => {
+      return r as StrictHttpResponse<Array<City>>;
+    })
+  );
 }
 
 getCities.PATH = '/cities';

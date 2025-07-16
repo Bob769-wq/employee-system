@@ -11,33 +11,27 @@ import { RequestBuilder } from '../../request-builder';
 import { Employee } from '../../models/employee';
 
 export interface GetEmployee$Params {
-  /**
-   * The id of the employee
-   */
+
+/**
+ * The id of the employee
+ */
   employeeId: number;
 }
 
-export function getEmployee(
-  http: HttpClient,
-  rootUrl: string,
-  params: GetEmployee$Params,
-  context?: HttpContext,
-): Observable<StrictHttpResponse<Employee>> {
+export function getEmployee(http: HttpClient, rootUrl: string, params: GetEmployee$Params, context?: HttpContext): Observable<StrictHttpResponse<Employee>> {
   const rb = new RequestBuilder(rootUrl, getEmployee.PATH, 'get');
   if (params) {
     rb.path('employeeId', params.employeeId, {});
   }
 
-  return http
-    .request(
-      rb.build({ responseType: 'json', accept: 'application/json', context }),
-    )
-    .pipe(
-      filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Employee>;
-      }),
-    );
+  return http.request(
+    rb.build({ responseType: 'json', accept: 'application/json', context })
+  ).pipe(
+    filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
+    map((r: HttpResponse<any>) => {
+      return r as StrictHttpResponse<Employee>;
+    })
+  );
 }
 
 getEmployee.PATH = '/employees/{employeeId}';

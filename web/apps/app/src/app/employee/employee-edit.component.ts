@@ -31,7 +31,7 @@ import { EmployeesQueryService } from './data-access/employee.query';
     PrimaryButtonComponent,
   ],
   template: `
-    <div class="px-6 py-2 text-2xl">新增人員</div>
+    <div class="px-6 py-2 text-2xl">{{ pageTitle() }}</div>
     <form class="flex flex-col gap-4" [formGroup]="form" (submit)="submit()">
       <div class="m-4 flex flex-col items-center gap-4 border p-6">
         <div class="flex w-full flex-col gap-4">
@@ -113,6 +113,9 @@ export class EmployeeEditComponent {
   existEmployeeId = computed(() => {
     return numberAttribute(this.employeeId());
   });
+  pageTitle = computed(() => {
+    return this.isNew() ? '新增人員' : '編輯人員';
+  });
   createMutation = this.#employeeQueryService.createMutation();
   updateMutation = this.#employeeQueryService.updateMutation();
 
@@ -137,6 +140,21 @@ export class EmployeeEditComponent {
       validators: [Validators.required, Validators.pattern(/^09\d{8}$/)],
     }),
   });
+
+  constructor() {
+    // if (this.existEmployeeId()) {
+    //   const currentData = this.employeeQueryById.data();
+    //   if (currentData) {
+    //     this.form.patchValue({
+    //       firstName: currentData.firstName,
+    //       lastName: currentData.lastName,
+    //       nationalId: currentData.nationalId,
+    //       email: currentData.email,
+    //       cellphone: currentData.cellphone,
+    //     });
+    //   }
+    // }
+  }
 
   #trim() {
     const { firstName, lastName, nationalId, email, cellphone } =

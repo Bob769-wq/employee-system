@@ -11,33 +11,27 @@ import { RequestBuilder } from '../../request-builder';
 import { Town } from '../../models/town';
 
 export interface GetTowns$Params {
-  /**
-   * The id of the city
-   */
+
+/**
+ * The id of the city
+ */
   cityId: number;
 }
 
-export function getTowns(
-  http: HttpClient,
-  rootUrl: string,
-  params: GetTowns$Params,
-  context?: HttpContext,
-): Observable<StrictHttpResponse<Array<Town>>> {
+export function getTowns(http: HttpClient, rootUrl: string, params: GetTowns$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<Town>>> {
   const rb = new RequestBuilder(rootUrl, getTowns.PATH, 'get');
   if (params) {
     rb.path('cityId', params.cityId, {});
   }
 
-  return http
-    .request(
-      rb.build({ responseType: 'json', accept: 'application/json', context }),
-    )
-    .pipe(
-      filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<Town>>;
-      }),
-    );
+  return http.request(
+    rb.build({ responseType: 'json', accept: 'application/json', context })
+  ).pipe(
+    filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
+    map((r: HttpResponse<any>) => {
+      return r as StrictHttpResponse<Array<Town>>;
+    })
+  );
 }
 
 getTowns.PATH = '/cities/{cityId}/towns';

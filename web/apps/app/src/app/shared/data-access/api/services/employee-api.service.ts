@@ -39,16 +39,9 @@ export class EmployeeApiService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getEmployees$Response(
-    params?: GetEmployees$Params,
-    context?: HttpContext,
-  ): Observable<
-    StrictHttpResponse<
-      PaginatedCollection & {
-        items: Array<Employee>;
-      }
-    >
-  > {
+  getEmployees$Response(params?: GetEmployees$Params, context?: HttpContext): Observable<StrictHttpResponse<PaginatedCollection & {
+'items': Array<Employee>;
+}>> {
     return getEmployees(this.http, this.rootUrl, params, context);
   }
 
@@ -58,26 +51,15 @@ export class EmployeeApiService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getEmployees(
-    params?: GetEmployees$Params,
-    context?: HttpContext,
-  ): Observable<
-    PaginatedCollection & {
-      items: Array<Employee>;
-    }
-  > {
+  getEmployees(params?: GetEmployees$Params, context?: HttpContext): Observable<PaginatedCollection & {
+'items': Array<Employee>;
+}> {
     return this.getEmployees$Response(params, context).pipe(
-      map(
-        (
-          r: StrictHttpResponse<
-            PaginatedCollection & {
-              items: Array<Employee>;
-            }
-          >,
-        ): PaginatedCollection & {
-          items: Array<Employee>;
-        } => r.body,
-      ),
+      map((r: StrictHttpResponse<PaginatedCollection & {
+'items': Array<Employee>;
+}>): PaginatedCollection & {
+'items': Array<Employee>;
+} => r.body)
     );
   }
 
@@ -90,10 +72,7 @@ export class EmployeeApiService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  createEmployee$Response(
-    params: CreateEmployee$Params,
-    context?: HttpContext,
-  ): Observable<StrictHttpResponse<Employee>> {
+  createEmployee$Response(params: CreateEmployee$Params, context?: HttpContext): Observable<StrictHttpResponse<Employee>> {
     return createEmployee(this.http, this.rootUrl, params, context);
   }
 
@@ -103,12 +82,9 @@ export class EmployeeApiService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  createEmployee(
-    params: CreateEmployee$Params,
-    context?: HttpContext,
-  ): Observable<Employee> {
+  createEmployee(params: CreateEmployee$Params, context?: HttpContext): Observable<Employee> {
     return this.createEmployee$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Employee>): Employee => r.body),
+      map((r: StrictHttpResponse<Employee>): Employee => r.body)
     );
   }
 
@@ -121,10 +97,7 @@ export class EmployeeApiService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getEmployee$Response(
-    params: GetEmployee$Params,
-    context?: HttpContext,
-  ): Observable<StrictHttpResponse<Employee>> {
+  getEmployee$Response(params: GetEmployee$Params, context?: HttpContext): Observable<StrictHttpResponse<Employee>> {
     return getEmployee(this.http, this.rootUrl, params, context);
   }
 
@@ -134,12 +107,9 @@ export class EmployeeApiService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getEmployee(
-    params: GetEmployee$Params,
-    context?: HttpContext,
-  ): Observable<Employee> {
+  getEmployee(params: GetEmployee$Params, context?: HttpContext): Observable<Employee> {
     return this.getEmployee$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Employee>): Employee => r.body),
+      map((r: StrictHttpResponse<Employee>): Employee => r.body)
     );
   }
 
@@ -152,10 +122,7 @@ export class EmployeeApiService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  updateEmployee$Response(
-    params: UpdateEmployee$Params,
-    context?: HttpContext,
-  ): Observable<StrictHttpResponse<Employee>> {
+  updateEmployee$Response(params: UpdateEmployee$Params, context?: HttpContext): Observable<StrictHttpResponse<Employee>> {
     return updateEmployee(this.http, this.rootUrl, params, context);
   }
 
@@ -165,12 +132,9 @@ export class EmployeeApiService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  updateEmployee(
-    params: UpdateEmployee$Params,
-    context?: HttpContext,
-  ): Observable<Employee> {
+  updateEmployee(params: UpdateEmployee$Params, context?: HttpContext): Observable<Employee> {
     return this.updateEmployee$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Employee>): Employee => r.body),
+      map((r: StrictHttpResponse<Employee>): Employee => r.body)
     );
   }
 
@@ -183,10 +147,7 @@ export class EmployeeApiService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  deleteEmployee$Response(
-    params: DeleteEmployee$Params,
-    context?: HttpContext,
-  ): Observable<StrictHttpResponse<void>> {
+  deleteEmployee$Response(params: DeleteEmployee$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
     return deleteEmployee(this.http, this.rootUrl, params, context);
   }
 
@@ -196,12 +157,10 @@ export class EmployeeApiService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  deleteEmployee(
-    params: DeleteEmployee$Params,
-    context?: HttpContext,
-  ): Observable<void> {
+  deleteEmployee(params: DeleteEmployee$Params, context?: HttpContext): Observable<void> {
     return this.deleteEmployee$Response(params, context).pipe(
-      map((r: StrictHttpResponse<void>): void => r.body),
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
+
 }

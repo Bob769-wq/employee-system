@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   inject,
   input,
   numberAttribute,
@@ -17,6 +18,7 @@ import { MatInputModule, MatLabel } from '@angular/material/input';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 
 import { EmployeeCreateInput } from '../shared/data-access/api/models/employee-create-input';
+import { EmployeeUpdateInput } from '../shared/data-access/api/models/employee-update-input';
 import { PrimaryButtonComponent } from '../shared/primary-button.component';
 import { EmployeesQueryService } from './data-access/employee.query';
 
@@ -93,7 +95,7 @@ import { EmployeesQueryService } from './data-access/employee.query';
                 />
               </mat-form-field>
             </div>
-            <app-primary-button label="新增" />
+            <app-primary-button [label]="buttonLabel()" />
           </div>
         </div>
       </div>
@@ -115,6 +117,9 @@ export class EmployeeEditComponent {
   });
   pageTitle = computed(() => {
     return this.isNew() ? '新增人員' : '編輯人員';
+  });
+  buttonLabel = computed(() => {
+    return this.isNew() ? '新增' : '更新';
   });
   createMutation = this.#employeeQueryService.createMutation();
   updateMutation = this.#employeeQueryService.updateMutation();
@@ -142,18 +147,25 @@ export class EmployeeEditComponent {
   });
 
   constructor() {
-    // if (this.existEmployeeId()) {
-    //   const currentData = this.employeeQueryById.data();
-    //   if (currentData) {
-    //     this.form.patchValue({
-    //       firstName: currentData.firstName,
-    //       lastName: currentData.lastName,
-    //       nationalId: currentData.nationalId,
-    //       email: currentData.email,
-    //       cellphone: currentData.cellphone,
-    //     });
-    //   }
-    // }
+    // console.log('start employee edit component....');
+    this.#initializeForm();
+  }
+
+  #initializeForm() {
+    effect(() => {
+      if (this.existEmployeeId()) {
+        const currentData = this.employeeQueryById.data();
+        if (currentData) {
+          this.form.patchValue({
+            firstName: currentData.firstName,
+            lastName: currentData.lastName,
+            nationalId: currentData.nationalId,
+            email: currentData.email,
+            cellphone: currentData.cellphone,
+          });
+        }
+      }
+    });
   }
 
   #trim() {
@@ -194,7 +206,29 @@ export class EmployeeEditComponent {
     });
   }
   #update() {
-    //
+    const { firstName, lastName, nationalId, email, cellphone } =
+      this.form.getRawValue();
+
+    const input: EmployeeUpdateInput = {
+      firstName: firstName,
+      lastName: lastName,
+      nationalId: nationalId,
+      email: email,
+      cellphone: cellphone,
+      townId: 1, // mock for now
+    };
+
+    this.updateMutation.mutate(
+      {
+        employeeId: this.existEmployeeId(),
+        body: input,
+      },
+      {
+        onSuccess: () => {
+          //
+        },
+      },
+    );
   }
 
   submit() {

@@ -8,6 +8,7 @@ import {
   MatHeaderCellDef,
   MatTableModule,
 } from '@angular/material/table';
+import { RouterLink } from '@angular/router';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 
 import { EmployeesQueryService } from './data-access/employee.query';
@@ -22,6 +23,7 @@ import { EmployeesQueryService } from './data-access/employee.query';
     MatColumnDef,
     MatHeaderCellDef,
     MatCellDef,
+    RouterLink,
   ],
   template: `
     <div class="px-6 py-2 text-2xl">員工列表</div>
@@ -62,7 +64,12 @@ import { EmployeesQueryService } from './data-access/employee.query';
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        <tr
+          mat-row
+          class="hover:bg-gray-100"
+          routerLink="/employees/{{ row.id }}/edit"
+          *matRowDef="let row; columns: displayedColumns"
+        ></tr>
       </table>
     </div>
   `,

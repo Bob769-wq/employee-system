@@ -1,3 +1,11 @@
+CREATE TABLE IF NOT EXISTS hobbies
+(
+  hobby_id serial PRIMARY KEY,
+  hobby_name text NOT NULL UNIQUE CHECK (hobby_name <> ''),
+  UNIQUE (hobby_name)
+);
+
+
 CREATE TABLE IF NOT EXISTS employees
 (
     employee_id serial PRIMARY KEY,
@@ -11,6 +19,15 @@ CREATE TABLE IF NOT EXISTS employees
     created_at      timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at      timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS employee_hobbies
+(
+    employee_id int NOT NULL REFERENCES employees (employee_id) ON DELETE CASCADE,
+    hobby_id    int NOT NULL REFERENCES hobbies (hobby_id) ON DELETE CASCADE,
+    PRIMARY KEY (employee_id, hobby_id)
+);
+
+CREATE INDEX idx_employee_hobbies ON employee_hobbies (employee_id, hobby_id);
 
 CREATE OR REPLACE VIEW v_employees AS
 (

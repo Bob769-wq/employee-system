@@ -28,24 +28,36 @@ CREATE TABLE IF NOT EXISTS employee_hobbies
 
 CREATE INDEX idx_employee_hobbies ON employee_hobbies (employee_id, hobby_id);
 
+CREATE OR REPLACE VIEW vbj_tmp_emp_hobbies AS
+(
+    SELECT employee_id,
+           json_agg(
+                   json_build_object(
+                           'hobby_id', h.hobby_id,
+                           'hobby_name', h.hobby_name
+                   )
+           ) AS hobbies
+    FROM employee_hobbies eh
+    LEFT JOIN hobbies h ON eh.hobby_id = h.hobby_id
+    GROUP BY employee_id
+);
+
 CREATE OR REPLACE VIEW v_employees AS
 (
     SELECT e.employee_id,
-           e.first_name,
-           e.last_name,
+           e.first_name, e.last_name,
            e.national_id,
            e.email,
            e.cellphone,
-           e.town_id,
-           c.town_name,
-           c.city_id,
-           c.city_name,
-           c.post_code,
-           e.address_detail,
+           e.town_id, c.town_name,
+           c.city_id, c.city_name,
+           c.post_code, e.address_detail,
+           COALESCE(h.hobbies, '[]'::json) AS hobbies,
            e.created_at,
            e.updated_at
     FROM employees e
     LEFT JOIN m_v_towns c ON e.town_id = c.town_id
+    LEFT JOIN vbj_tmp_emp_hobbies h ON e.employee_id = h.employee_id
 );
 
 CREATE TYPE user_types AS ENUM ('superAdmin', 'admin', 'staff', 'user');

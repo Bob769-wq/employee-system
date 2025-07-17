@@ -1,0 +1,24 @@
+@NOW = 2025-06-24T04:51:21Z
+@LATER = 2025-06-24T04:52:21Z
+@baseUrl = http://localhost:3000/v1
+@pattern = hobbies
+
+### Get
+GET {{baseUrl}}/{{pattern}}
+
+### Create
+POST {{baseUrl}}/{{pattern}}
+
+{
+    "name": "string",
+}
+
+### Update
+PUT {{baseUrl}}/{{pattern}}/1
+
+{
+    "name": "string",
+}
+
+### Delete
+DELETE {{baseUrl}}/{{pattern}}/1

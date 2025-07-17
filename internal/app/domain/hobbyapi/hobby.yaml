@@ -1,0 +1,181 @@
+openapi: 3.0.3
+info:
+  title: Go API
+  description: A simple API developed in Go
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:3000/v1'
+paths:
+  # HobbyAPI
+  /hobbies:
+    get:
+      tags:
+        - HobbyAPI
+      operationId: getHobbies
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/pageSizeParam'
+        - $ref: '#/components/parameters/orderByParam'
+      responses:
+        200:
+          description: A list of hobbies
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedCollection'
+                  - type: object
+                    required:
+                      - items
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Hobby'
+    post:
+      tags:
+        - HobbyAPI
+      operationId: createHobby
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HobbyCreateInput'
+      responses:
+        201:
+          description: The created hobby
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hobby'
+  /hobbies/{hobbyId}:
+    get:
+      tags:
+        - HobbyAPI
+      operationId: getHobby
+      parameters:
+        - name: hobbyId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The id of the hobby
+      responses:
+        200:
+          description: A hobby
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hobby'
+    put:
+      tags:
+        - HobbyAPI
+      operationId: updateHobby
+      parameters:
+        - name: hobbyId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The id of the hobby
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HobbyUpdateInput'
+      responses:
+        200:
+          description: The updated hobby
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hobby'
+    delete:
+      tags:
+        - HobbyAPI
+      operationId: deleteHobby
+      parameters:
+        - name: hobbyId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The id of the hobby
+      responses:
+        204:
+          description: No Content
+
+components:
+  parameters:
+    pageParam:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+      description: The page number
+    pageSizeParam:
+      name: pageSize
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+      description: The page size
+    orderByParam:
+      name: orderBy
+      in: query
+      required: false
+      schema:
+        type: string
+      description: The field to order by
+  schemas:
+
+    # HobbyAPI
+    Hobby:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    HobbyCreateInput:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+    HobbyUpdateInput:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+
+    # Util
+    PaginatedCollection:
+      description: a generic type for paginated results
+      required:
+        - total
+        - page
+        - pageSize
+      properties:
+        total:
+          type: integer
+        page:
+          type: integer
+        pageSize:
+          type: integer
+        # Note: `items` must be defined in the operation, otherwise the generated typescript code will not work properly
+

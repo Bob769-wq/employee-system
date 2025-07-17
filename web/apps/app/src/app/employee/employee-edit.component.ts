@@ -144,6 +144,16 @@ import { EmployeesQueryService } from './data-access/employee.query';
                 />
               </mat-form-field>
             </div>
+          </div>
+
+          <div class="flex items-start outline">
+            <div class="flex px-8">
+              <mat-label class="mr-6 w-32 text-2xl">興趣</mat-label>
+              <!--TODO: 興趣table-->
+            </div>
+          </div>
+
+          <div class="w-32 self-center">
             <app-primary-button [label]="buttonLabel()" />
           </div>
         </div>

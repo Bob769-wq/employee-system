@@ -28,7 +28,7 @@ import { PrimaryButtonComponent } from '../shared/primary-button.component';
         <app-button routerLink="/employees/new/edit" label="新增人員" />
       </div>
 
-      <app-primary-button [label]="'Click'" />
+      <!--      <app-primary-button [label]="'Click'" />-->
     </div>
   `,
   styles: ``,

@@ -7,7 +7,7 @@ import {
 import { toast } from 'ngx-sonner';
 import { firstValueFrom } from 'rxjs';
 
-import { GetEmployees$Params } from '../../shared/data-access/api/fn/employee-api/get-employees';
+import { GetCities$Params } from '../../shared/data-access/api/fn/employee-api/get-employees';
 import { EmployeeCreateInput } from '../../shared/data-access/api/models/employee-create-input';
 import { EmployeeUpdateInput } from '../../shared/data-access/api/models/employee-update-input';
 import { EmployeeApiService } from '../../shared/data-access/api/services';
@@ -22,7 +22,7 @@ export class EmployeesQueryService {
   #loadingService = inject(LoadingService);
   #qc = inject(QueryClient);
 
-  employeesQuery = (params?: GetEmployees$Params) =>
+  employeesQuery = (params?: GetCities$Params) =>
     queryOptions({
       queryKey: ['employees', 'list', params],
       queryFn: () =>

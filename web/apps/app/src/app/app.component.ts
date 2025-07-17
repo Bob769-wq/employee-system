@@ -11,8 +11,8 @@ import { HeaderComponent } from './header/header.component';
     <app-header />
     <router-outlet />
     <ngx-sonner-toaster
-      duration="3000"
-      position="bottom-right"
+      duration="2000"
+      position="bottom-center"
       richColors
       closeButton
     />

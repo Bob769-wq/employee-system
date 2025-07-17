@@ -8,14 +8,14 @@ import (
 var CurrentTanStackVersion = `@tanstack/angular-query-experimental": "^5.79.0"`
 
 const (
-	dbPrefix    = "employee"
-	dbTableName = "employees"
-	dbViewName  = "v_employees"
-	defaultPath = "employees"
+	dbPrefix    = "hobby"
+	dbTableName = "hobbies"
+	dbViewName  = ""
+	defaultPath = "hobbies"
 )
 
 const (
-	chineseName = "員工"
+	chineseName = "興趣"
 )
 
 func rawFieldData() [][]string {
@@ -23,16 +23,7 @@ func rawFieldData() [][]string {
 	// sFalse可以控制create, update時是否包含這個欄位
 	// 例如：{"Name", typeString, "", dbPrefix, "", "", sFalse, sFalse},
 	data := [][]string{
-		{"FirstName", typeString, "", noDBPrefix, "", "", "", ""},
-		{"LastName", typeString, "", noDBPrefix, "", "", "", ""},
-		{"NationalID", typeString, "", noDBPrefix, "", "", "", ""},
-		{"Email", typeString, "", noDBPrefix, "", "", "", ""},
-		{"Cellphone", typeString, "", noDBPrefix, "", "", "", ""},
-		{"TownID", typeInt, "", noDBPrefix, "", "", "", ""},
-		{"TownName", typeString, "", noDBPrefix, "", "", sFalse, sFalse},
-		{"PostCode", typeString, "", noDBPrefix, "", "", sFalse, sFalse},
-		{"CityID", typeInt, "", noDBPrefix, "", "", sFalse, sFalse},
-		{"CityName", typeString, "", noDBPrefix, "", "", sFalse, sFalse},
+		{"Name", typeString, "", dbPrefix, "", "", "", ""},
 	}
 
 	// codegen:{regenerate-data}

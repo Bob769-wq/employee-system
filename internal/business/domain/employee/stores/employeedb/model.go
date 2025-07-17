@@ -25,7 +25,7 @@ type dbEmployee struct {
 	CreatedAt       time.Time                            `db:"created_at"`
 	UpdatedAt       time.Time                            `db:"updated_at"`
 	AddressDetail   string                               `db:"address_detail"`
-	EmployeeHobbies dbjson.JSONColumn[[]dbEmployeeHobby] `db:"employeehobbies"`
+	EmployeeHobbies dbjson.JSONColumn[[]dbEmployeeHobby] `db:"hobbies"`
 	// codegen:{SD}
 }
 
@@ -52,21 +52,26 @@ func toDBEmployee(emp employee.Employee) dbEmployee {
 }
 
 func toCoreEmployee(dbEmp dbEmployee) (employee.Employee, error) {
+	eHobby, err := toCoreEmployeeHobbies(dbEmp.EmployeeHobbies.Get())
+	if err != nil {
+		return employee.Employee{}, fmt.Errorf("parse employee hobbies: %w", err)
+	}
 	emp := employee.Employee{
-		ID:            dbEmp.ID,
-		FirstName:     dbEmp.FirstName,
-		LastName:      dbEmp.LastName,
-		NationalID:    dbEmp.NationalID,
-		Email:         dbEmp.Email,
-		Cellphone:     dbEmp.Cellphone,
-		TownID:        dbEmp.TownID,
-		TownName:      dbEmp.TownName,
-		PostCode:      dbEmp.PostCode,
-		CityID:        dbEmp.CityID,
-		CityName:      dbEmp.CityName,
-		CreatedAt:     dbEmp.CreatedAt,
-		UpdatedAt:     dbEmp.UpdatedAt,
-		AddressDetail: dbEmp.AddressDetail,
+		ID:              dbEmp.ID,
+		FirstName:       dbEmp.FirstName,
+		LastName:        dbEmp.LastName,
+		NationalID:      dbEmp.NationalID,
+		Email:           dbEmp.Email,
+		Cellphone:       dbEmp.Cellphone,
+		TownID:          dbEmp.TownID,
+		TownName:        dbEmp.TownName,
+		PostCode:        dbEmp.PostCode,
+		CityID:          dbEmp.CityID,
+		CityName:        dbEmp.CityName,
+		CreatedAt:       dbEmp.CreatedAt,
+		UpdatedAt:       dbEmp.UpdatedAt,
+		AddressDetail:   dbEmp.AddressDetail,
+		EmployeeHobbies: eHobby,
 		// codegen:{tBD}
 	}
 

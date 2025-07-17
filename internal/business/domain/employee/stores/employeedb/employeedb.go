@@ -81,6 +81,7 @@ func (s *Store) Query(ctx context.Context, filter employee.QueryFilter, orderBy 
                 city_id,
                 city_name,
 				address_detail,
+				hobbies,
 				created_at,
 				updated_at
         FROM v_employees
@@ -125,6 +126,7 @@ func (s *Store) QueryByID(ctx context.Context, employeeID int) (employee.Employe
                city_id,
                city_name,
 			   address_detail,
+			   hobbies,
 			   created_at,
 			   updated_at
         FROM v_employees

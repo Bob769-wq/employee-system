@@ -20,7 +20,7 @@ POST {{baseUrl}}/{{pattern}}
     "employeeHobbies": [
         {
             "id": 0,
-            "name": "nweHobby"
+            "name": "newwHobby"
         },
         {
             "id": 2

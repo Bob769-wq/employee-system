@@ -98,6 +98,17 @@ import { EmployeesQueryService } from './data-access/employee.query';
                 </mat-select>
               </mat-form-field>
             </div>
+            <div class="w-100 flex px-8">
+              <mat-label class="mr-6 w-12 text-2xl">地址</mat-label>
+              <mat-form-field appearance="outline" class="w-80">
+                <input
+                  matInput
+                  type="text"
+                  placeholder="地址"
+                  formControlName="addressDetail"
+                />
+              </mat-form-field>
+            </div>
           </div>
           <div class="flex items-start">
             <div class="flex px-8">
@@ -172,6 +183,9 @@ export class EmployeeEditComponent {
     townId: this.#fb.control<number | undefined>(undefined, {
       validators: [Validators.required],
     }),
+    addressDetail: this.#fb.control('', {
+      validators: [Validators.required, Validators.minLength(1)],
+    }),
   });
   chosenCityId = controlValue(this.form.controls.cityId);
 
@@ -217,6 +231,7 @@ export class EmployeeEditComponent {
           cellphone: currentData.cellphone,
           cityId: currentData.town.city.id,
           townId: currentData.town.id,
+          addressDetail: currentData.addressDetail,
         });
       } else {
         this.form.patchValue({
@@ -227,13 +242,14 @@ export class EmployeeEditComponent {
           cellphone: undefined,
           cityId: undefined,
           townId: undefined,
+          addressDetail: undefined,
         });
       }
     });
   }
 
   #trim() {
-    const { firstName, lastName, nationalId, email, cellphone } =
+    const { firstName, lastName, nationalId, email, cellphone, addressDetail } =
       this.form.getRawValue();
     this.form.patchValue({
       firstName: firstName.trim(),
@@ -241,6 +257,7 @@ export class EmployeeEditComponent {
       nationalId: nationalId.trim(),
       email: email.trim(),
       cellphone: cellphone.trim(),
+      addressDetail: addressDetail.trim(),
     });
   }
 
@@ -251,8 +268,15 @@ export class EmployeeEditComponent {
   }
 
   #create() {
-    const { firstName, lastName, nationalId, email, cellphone, townId } =
-      this.form.getRawValue();
+    const {
+      firstName,
+      lastName,
+      nationalId,
+      email,
+      cellphone,
+      townId,
+      addressDetail,
+    } = this.form.getRawValue();
 
     const input: EmployeeCreateInput = {
       firstName: firstName,
@@ -261,6 +285,7 @@ export class EmployeeEditComponent {
       email: email,
       cellphone: cellphone,
       townId: townId ?? 0,
+      addressDetail: addressDetail,
     };
 
     this.createMutation.mutate(input, {
@@ -270,8 +295,15 @@ export class EmployeeEditComponent {
     });
   }
   #update() {
-    const { firstName, lastName, nationalId, email, cellphone, townId } =
-      this.form.getRawValue();
+    const {
+      firstName,
+      lastName,
+      nationalId,
+      email,
+      cellphone,
+      townId,
+      addressDetail,
+    } = this.form.getRawValue();
 
     const input: EmployeeUpdateInput = {
       firstName: firstName,
@@ -280,6 +312,7 @@ export class EmployeeEditComponent {
       email: email,
       cellphone: cellphone,
       townId: townId ?? 0,
+      addressDetail: addressDetail,
     };
 
     this.updateMutation.mutate(

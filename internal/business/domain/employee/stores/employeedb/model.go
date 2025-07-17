@@ -22,7 +22,7 @@ type dbEmployee struct {
 	CityName      string    `db:"city_name"`
 	CreatedAt     time.Time `db:"created_at"`
 	UpdatedAt     time.Time `db:"updated_at"`
-	AddressDetail string    `db:"addressdetail"`
+	AddressDetail string    `db:"address_detail"`
 	// codegen:{SD}
 }
 

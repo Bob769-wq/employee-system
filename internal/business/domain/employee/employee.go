@@ -117,6 +117,7 @@ func (c *Core) Update(ctx context.Context, emp Employee, uEmp UpdateEmployee) (E
 	emp.Email = uEmp.Email
 	emp.Cellphone = uEmp.Cellphone
 	emp.TownID = uEmp.TownID
+	emp.AddressDetail = uEmp.AddressDetail
 	emp, err := c.storer.Update(ctx, emp)
 	if err != nil {
 		return Employee{}, fmt.Errorf("update: %w", err)

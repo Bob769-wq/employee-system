@@ -186,6 +186,7 @@ components:
         - email
         - cellphone
         - town
+        - addressDetail
         - createdAt
         - updatedAt
       properties:
@@ -225,6 +226,8 @@ components:
                   type: integer
                 name:
                   type: string
+        addressDetail:
+          type: string
         createdAt:
           type: string
           format: date-time
@@ -241,6 +244,7 @@ components:
         - email
         - cellphone
         - townId
+        - addressDetail
       properties:
         firstName:
           type: string
@@ -254,6 +258,8 @@ components:
           type: string
         townId:
           type: integer
+        addressDetail:
+          type: string
     EmployeeUpdateInput:
       type: object
       required:
@@ -263,6 +269,7 @@ components:
         - email
         - cellphone
         - townId
+        - addressDetail
       properties:
         firstName:
           type: string
@@ -276,6 +283,8 @@ components:
           type: string
         townId:
           type: integer
+        addressDetail:
+          type: string
     # Util
     PaginatedCollection:
       description: a generic type for paginated results

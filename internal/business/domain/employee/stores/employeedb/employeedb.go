@@ -80,6 +80,7 @@ func (s *Store) Query(ctx context.Context, filter employee.QueryFilter, orderBy 
                 post_code,
                 city_id,
                 city_name,
+				address_detail,
 				created_at,
 				updated_at
         FROM v_employees
@@ -123,6 +124,7 @@ func (s *Store) QueryByID(ctx context.Context, employeeID int) (employee.Employe
                post_code,
                city_id,
                city_name,
+			   address_detail,
 			   created_at,
 			   updated_at
         FROM v_employees
@@ -152,7 +154,8 @@ func (s *Store) Create(ctx context.Context, emp employee.Employee) (employee.Emp
             national_id,
             email,
             cellphone,
-            town_id
+            town_id,
+			address_detail
         )
         VALUES
         (   
@@ -161,7 +164,8 @@ func (s *Store) Create(ctx context.Context, emp employee.Employee) (employee.Emp
             :national_id,
             :email,
             :cellphone,
-            :town_id
+            :town_id,
+			:address_detail
         )
         RETURNING employee_id
     `
@@ -190,7 +194,8 @@ func (s *Store) Update(ctx context.Context, emp employee.Employee) (employee.Emp
             national_id = :national_id,
             email       = :email,
             cellphone   = :cellphone,
-            town_id     = :town_id
+            town_id     = :town_id,
+			address_detail = :address_detail
         WHERE employee_id = :employee_id
         RETURNING employee_id
     `

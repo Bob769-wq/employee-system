@@ -10,15 +10,16 @@ import (
 
 // AppEmployee represents an individual employee.
 type AppEmployee struct {
-	ID         int             `json:"id"`
-	FirstName  string          `json:"firstName"`
-	LastName   string          `json:"lastName"`
-	NationalID string          `json:"nationalId"`
-	Email      string          `json:"email"`
-	Cellphone  string          `json:"cellphone"`
-	Town       townapi.AppTown `json:"town"`
-	CreatedAt  time.Time       `json:"createdAt"`
-	UpdatedAt  time.Time       `json:"updatedAt"`
+	ID            int             `json:"id"`
+	FirstName     string          `json:"firstName"`
+	LastName      string          `json:"lastName"`
+	NationalID    string          `json:"nationalId"`
+	Email         string          `json:"email"`
+	Cellphone     string          `json:"cellphone"`
+	Town          townapi.AppTown `json:"town"`
+	CreatedAt     time.Time       `json:"createdAt"`
+	UpdatedAt     time.Time       `json:"updatedAt"`
+	AddressDetail string          `json:"addressDetail"`
 	// codegen:{AD}
 }
 
@@ -39,8 +40,9 @@ func toAppEmployee(emp employee.Employee) AppEmployee {
 				Name: emp.CityName,
 			},
 		},
-		CreatedAt: emp.CreatedAt,
-		UpdatedAt: emp.UpdatedAt,
+		CreatedAt:     emp.CreatedAt,
+		UpdatedAt:     emp.UpdatedAt,
+		AddressDetail: emp.AddressDetail,
 		// codegen:{tAD}
 	}
 }
@@ -57,12 +59,13 @@ func toAppEmployees(emps []employee.Employee) []AppEmployee {
 // =============================================================================
 
 type AppNewEmployee struct {
-	FirstName  string `json:"firstName"`
-	LastName   string `json:"lastName"`
-	NationalID string `json:"nationalId"`
-	Email      string `json:"email"`
-	Cellphone  string `json:"cellphone"`
-	TownID     int    `json:"townId"`
+	FirstName     string `json:"firstName"`
+	LastName      string `json:"lastName"`
+	NationalID    string `json:"nationalId"`
+	Email         string `json:"email"`
+	Cellphone     string `json:"cellphone"`
+	TownID        int    `json:"townId"`
+	AddressDetail string `json:"addressDetail"`
 	// codegen:{AN}
 }
 
@@ -77,12 +80,13 @@ func (app AppNewEmployee) Validate() error {
 func toCoreNewEmployee(app AppNewEmployee) (employee.NewEmployee, error) {
 	// codegen:{tManyBN}
 	nEmp := employee.NewEmployee{
-		FirstName:  app.FirstName,
-		LastName:   app.LastName,
-		NationalID: app.NationalID,
-		Email:      app.Email,
-		Cellphone:  app.Cellphone,
-		TownID:     app.TownID,
+		FirstName:     app.FirstName,
+		LastName:      app.LastName,
+		NationalID:    app.NationalID,
+		Email:         app.Email,
+		Cellphone:     app.Cellphone,
+		TownID:        app.TownID,
+		AddressDetail: app.AddressDetail,
 		// codegen:{tBN}
 	}
 
@@ -92,12 +96,13 @@ func toCoreNewEmployee(app AppNewEmployee) (employee.NewEmployee, error) {
 // =============================================================================
 
 type AppUpdateEmployee struct {
-	FirstName  string `json:"firstName"`
-	LastName   string `json:"lastName"`
-	NationalID string `json:"nationalId"`
-	Email      string `json:"email"`
-	Cellphone  string `json:"cellphone"`
-	TownID     int    `json:"townId"`
+	FirstName     string `json:"firstName"`
+	LastName      string `json:"lastName"`
+	NationalID    string `json:"nationalId"`
+	Email         string `json:"email"`
+	Cellphone     string `json:"cellphone"`
+	TownID        int    `json:"townId"`
+	AddressDetail string `json:"addressDetail"`
 	// codegen:{AU}
 }
 
@@ -112,12 +117,13 @@ func (app AppUpdateEmployee) Validate() error {
 func toCoreUpdateEmployee(app AppUpdateEmployee) (employee.UpdateEmployee, error) {
 	// codegen:{tManyBU}
 	uEmp := employee.UpdateEmployee{
-		FirstName:  app.FirstName,
-		LastName:   app.LastName,
-		NationalID: app.NationalID,
-		Email:      app.Email,
-		Cellphone:  app.Cellphone,
-		TownID:     app.TownID,
+		FirstName:     app.FirstName,
+		LastName:      app.LastName,
+		NationalID:    app.NationalID,
+		Email:         app.Email,
+		Cellphone:     app.Cellphone,
+		TownID:        app.TownID,
+		AddressDetail: app.AddressDetail,
 		// codegen:{tBU}
 	}
 

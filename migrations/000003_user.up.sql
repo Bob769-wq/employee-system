@@ -1,14 +1,15 @@
 CREATE TABLE IF NOT EXISTS employees
 (
     employee_id serial PRIMARY KEY,
-    first_name  text NOT NULL CHECK (first_name <> ''),
-    last_name   text NOT NULL CHECK (last_name <> ''),
-    national_id text NOT NULL CHECK (national_id <> ''),
-    email       text NOT NULL CHECK (email <> ''),
-    cellphone   text NOT NULL CHECK (cellphone ~ '^\d{10}$'),
-    town_id     int  NOT NULL REFERENCES city_towns (town_id),
-    created_at  timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at  timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP
+    first_name      text NOT NULL CHECK (first_name <> ''),
+    last_name       text NOT NULL CHECK (last_name <> ''),
+    national_id     text NOT NULL CHECK (national_id <> ''),
+    email           text NOT NULL CHECK (email <> ''),
+    cellphone       text NOT NULL CHECK (cellphone ~ '^\d{10}$'),
+    town_id         int  NOT NULL REFERENCES city_towns (town_id),
+    address_detail  text NOT NULL,
+    created_at      timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at      timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE OR REPLACE VIEW v_employees AS
@@ -24,6 +25,7 @@ CREATE OR REPLACE VIEW v_employees AS
            c.city_id,
            c.city_name,
            c.post_code,
+           e.address_detail,
            e.created_at,
            e.updated_at
     FROM employees e

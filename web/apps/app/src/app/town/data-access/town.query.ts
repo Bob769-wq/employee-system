@@ -2,7 +2,6 @@ import { inject, Injectable } from '@angular/core';
 import { queryOptions } from '@tanstack/angular-query-experimental';
 import { firstValueFrom } from 'rxjs';
 
-import { GetCities$Params } from '../../shared/data-access/api/fn/town-api/get-cities';
 import { TownApiService } from '../../shared/data-access/api/services';
 
 @Injectable({
@@ -13,9 +12,9 @@ export class EmployeesQueryService {
   // #loadingService = inject(LoadingService);
   // #qc = inject(QueryClient);
 
-  citiesQuery = (params?: GetCities$Params) =>
+  citiesQuery = () =>
     queryOptions({
-      queryKey: ['cities', 'list', params],
+      queryKey: ['cities', 'list'],
       queryFn: () => firstValueFrom(this.#townService.getCities({})),
     });
 

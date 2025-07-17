@@ -62,9 +62,13 @@ import { EmployeesQueryService } from './data-access/employee.query';
           </ng-container>
 
           <ng-container matColumnDef="address">
-            <th mat-header-cell *matHeaderCellDef>縣市</th>
+            <th mat-header-cell *matHeaderCellDef>地址</th>
             <td mat-cell *matCellDef="let element">
-              {{ element.town.city.name + element.town.name }}
+              {{
+                element.town.city.name +
+                  element.town.name +
+                  element.addressDetail
+              }}
             </td>
           </ng-container>
 

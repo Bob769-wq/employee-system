@@ -7,7 +7,6 @@ import {
   inject,
   input,
   numberAttribute,
-  untracked,
 } from '@angular/core';
 import {
   NonNullableFormBuilder,
@@ -203,31 +202,22 @@ export class EmployeeEditComponent {
 
   constructor() {
     this.#initializeFormEffect();
-    this.#resetTownIdEffect();
-  }
-
-  #resetTownIdEffect() {
-    effect(() => {
-      this.chosenCityId();
-      untracked(() => {
-        this.form.controls.townId.reset();
-      });
-    });
+    // this.#resetTownIdEffect();
   }
 
   #initializeFormEffect() {
     effect(() => {
-      if (this.existEmployeeId()) {
-        const currentData = this.employeeQueryById.data();
-        if (currentData) {
-          this.form.patchValue({
-            firstName: currentData.firstName,
-            lastName: currentData.lastName,
-            nationalId: currentData.nationalId,
-            email: currentData.email,
-            cellphone: currentData.cellphone,
-          });
-        }
+      const currentData = this.employeeQueryById.data();
+      if (currentData) {
+        this.form.patchValue({
+          firstName: currentData.firstName,
+          lastName: currentData.lastName,
+          nationalId: currentData.nationalId,
+          email: currentData.email,
+          cellphone: currentData.cellphone,
+          cityId: currentData.town.city.id,
+          townId: currentData.town.id,
+        });
       } else {
         this.form.patchValue({
           firstName: undefined,
@@ -235,6 +225,8 @@ export class EmployeeEditComponent {
           nationalId: undefined,
           email: undefined,
           cellphone: undefined,
+          cityId: undefined,
+          townId: undefined,
         });
       }
     });

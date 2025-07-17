@@ -7,6 +7,7 @@ import {
   inject,
   input,
   numberAttribute,
+  untracked,
 } from '@angular/core';
 import {
   NonNullableFormBuilder,
@@ -15,11 +16,14 @@ import {
 } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule, MatLabel } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { controlValue } from '@app/common/signal/ui/form';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 
 import { EmployeeCreateInput } from '../shared/data-access/api/models/employee-create-input';
 import { EmployeeUpdateInput } from '../shared/data-access/api/models/employee-update-input';
 import { PrimaryButtonComponent } from '../shared/primary-button.component';
+import { TownQueryService } from '../town/data-access/town.query';
 import { EmployeesQueryService } from './data-access/employee.query';
 
 @Component({
@@ -31,6 +35,7 @@ import { EmployeesQueryService } from './data-access/employee.query';
     MatFormFieldModule,
     ReactiveFormsModule,
     PrimaryButtonComponent,
+    MatSelectModule,
   ],
   template: `
     <div class="px-6 py-2 text-2xl">{{ pageTitle() }}</div>
@@ -58,6 +63,40 @@ import { EmployeesQueryService } from './data-access/employee.query';
                   placeholder="大名"
                   formControlName="firstName"
                 />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="flex">
+            <div class="flex px-8">
+              <mat-label class="mr-6 w-32 text-2xl">縣市</mat-label>
+              <mat-form-field appearance="outline">
+                <mat-select formControlName="cityId">
+                  @if (citiesQuery.isPending()) {
+                    讀取中...
+                  } @else if (citiesQuery.isError()) {
+                    讀取失敗
+                  } @else {
+                    @for (city of citiesQuery.data(); track city.id) {
+                      <mat-option [value]="city.id">{{ city.name }}</mat-option>
+                    }
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="flex px-8">
+              <mat-label class="mr-6 w-12 text-2xl">鄉鎮</mat-label>
+              <mat-form-field appearance="outline">
+                <mat-select formControlName="townId">
+                  @if (townsQuery.isPending()) {
+                    讀取中...
+                  } @else if (townsQuery.isError()) {
+                    讀取失敗
+                  } @else {
+                    @for (town of townsQuery.data(); track town.id) {
+                      <mat-option [value]="town.id">{{ town.name }}</mat-option>
+                    }
+                  }
+                </mat-select>
               </mat-form-field>
             </div>
           </div>
@@ -105,26 +144,10 @@ import { EmployeesQueryService } from './data-access/employee.query';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployeeEditComponent {
+  #townQueryService = inject(TownQueryService);
   #employeeQueryService = inject(EmployeesQueryService);
-  employeeQueryById = injectQuery(() =>
-    this.#employeeQueryService.employeeQueryById(this.existEmployeeId()),
-  );
-
-  employeeId = input.required<string>();
-  isNew = computed(() => this.employeeId() === 'new');
-  existEmployeeId = computed(() => {
-    return numberAttribute(this.employeeId());
-  });
-  pageTitle = computed(() => {
-    return this.isNew() ? '新增人員' : '編輯人員';
-  });
-  buttonLabel = computed(() => {
-    return this.isNew() ? '新增' : '更新';
-  });
-  createMutation = this.#employeeQueryService.createMutation();
-  updateMutation = this.#employeeQueryService.updateMutation();
-
   #fb = inject(NonNullableFormBuilder);
+
   form = this.#fb.group({
     firstName: this.#fb.control('', {
       validators: [Validators.required, Validators.minLength(1)],
@@ -144,14 +167,55 @@ export class EmployeeEditComponent {
     cellphone: this.#fb.control('', {
       validators: [Validators.required, Validators.pattern(/^09\d{8}$/)],
     }),
+    cityId: this.#fb.control<number | undefined>(undefined, {
+      validators: [Validators.required],
+    }),
+    townId: this.#fb.control<number | undefined>(undefined, {
+      validators: [Validators.required],
+    }),
   });
+  chosenCityId = controlValue(this.form.controls.cityId);
+
+  citiesQuery = injectQuery(() => this.#townQueryService.citiesQuery());
+  townsQuery = injectQuery(() =>
+    this.#townQueryService.townsQuery(this.chosenCityId()),
+  );
+
+  employeeId = input.required<string>();
+  employeeQueryById = injectQuery(() =>
+    this.#employeeQueryService.employeeQueryById(this.existEmployeeId()),
+  );
+
+  isNew = computed(() => this.employeeId() === 'new');
+  existEmployeeId = computed(() => {
+    return numberAttribute(this.employeeId());
+  });
+  pageTitle = computed(() => {
+    return this.isNew() ? '新增人員' : '編輯人員';
+  });
+  buttonLabel = computed(() => {
+    return this.isNew() ? '新增' : '更新';
+  });
+  createMutation = this.#employeeQueryService.createMutation();
+  updateMutation = this.#employeeQueryService.updateMutation();
+
+  chosenTownId = controlValue(this.form.controls.townId);
 
   constructor() {
-    // console.log('start employee edit component....');
-    this.#initializeForm();
+    this.#initializeFormEffect();
+    this.#resetTownIdEffect();
   }
 
-  #initializeForm() {
+  #resetTownIdEffect() {
+    effect(() => {
+      this.chosenCityId();
+      untracked(() => {
+        this.form.controls.townId.reset();
+      });
+    });
+  }
+
+  #initializeFormEffect() {
     effect(() => {
       if (this.existEmployeeId()) {
         const currentData = this.employeeQueryById.data();
@@ -164,6 +228,14 @@ export class EmployeeEditComponent {
             cellphone: currentData.cellphone,
           });
         }
+      } else {
+        this.form.patchValue({
+          firstName: undefined,
+          lastName: undefined,
+          nationalId: undefined,
+          email: undefined,
+          cellphone: undefined,
+        });
       }
     });
   }

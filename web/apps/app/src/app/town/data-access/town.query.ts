@@ -7,7 +7,7 @@ import { TownApiService } from '../../shared/data-access/api/services';
 @Injectable({
   providedIn: 'root',
 })
-export class EmployeesQueryService {
+export class TownQueryService {
   #townService = inject(TownApiService);
   // #loadingService = inject(LoadingService);
   // #qc = inject(QueryClient);
@@ -18,9 +18,11 @@ export class EmployeesQueryService {
       queryFn: () => firstValueFrom(this.#townService.getCities({})),
     });
 
-  townsQuery = (cityId: number) =>
+  townsQuery = (cityId: number | undefined) =>
     queryOptions({
       queryKey: ['towns', 'list', cityId],
-      queryFn: () => firstValueFrom(this.#townService.getTowns({ cityId })),
+      queryFn: () =>
+        firstValueFrom(this.#townService.getTowns({ cityId: cityId ?? 0 })),
+      enabled: !!cityId,
     });
 }

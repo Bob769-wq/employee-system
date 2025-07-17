@@ -1,13 +1,9 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  queryOptions,
-} from '@tanstack/angular-query-experimental';
+import { queryOptions } from '@tanstack/angular-query-experimental';
 import { firstValueFrom } from 'rxjs';
 
-import { GetCities$Params } from '../../shared/data-access/api/fn/employee-api/get-employees';
-import {
-  TownApiService,
-} from '../../shared/data-access/api/services';
+import { GetCities$Params } from '../../shared/data-access/api/fn/town-api/get-cities';
+import { TownApiService } from '../../shared/data-access/api/services';
 
 @Injectable({
   providedIn: 'root',

@@ -1,3 +1,38 @@
+INSERT INTO hobbies
+(hobby_name)
+VALUES
+('打籃球'),
+('看電影'),
+('唱歌'),
+('閱讀'),
+('旅遊'),
+('烹飪'),
+('健身'),
+('攝影'),
+('繪畫'),
+('釣魚'),
+('跑步'),
+('騎自行車'),
+('瑜伽'),
+('園藝'),
+('手工藝'),
+('音樂'),
+('舞蹈'),
+('寫作'),
+('針織'),
+('陶藝'),
+('釣蝦'),
+('滑雪'),
+('滑板'),
+('攀岩'),
+('潛水'),
+('衝浪'),
+('滑翔傘'),
+('飛行'),
+('射箭'),
+('拳擊')
+;
+
 INSERT INTO employees
 (employee_id, first_name, last_name, national_id, email, cellphone, town_id, address_detail, created_at, updated_at)
 VALUES

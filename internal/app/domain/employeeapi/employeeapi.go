@@ -130,14 +130,14 @@ func (h *handlers) update(ctx context.Context, w http.ResponseWriter, r *http.Re
 		return errs.NewTrustedError(err, http.StatusBadRequest)
 	}
 
-	uEmp, err := toCoreUpdateEmployee(app)
-	if err != nil {
-		return errs.NewTrustedError(err, http.StatusBadRequest)
-	}
-
 	emp, err := getEmployee(ctx)
 	if err != nil {
 		return err
+	}
+
+	uEmp, err := toCoreUpdateEmployee(app, emp.ID)
+	if err != nil {
+		return errs.NewTrustedError(err, http.StatusBadRequest)
 	}
 
 	if err := h.txM.RunTx(ctx, func(txM tran.TxManager) error {

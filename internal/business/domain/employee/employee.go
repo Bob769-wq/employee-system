@@ -84,15 +84,24 @@ func (c *Core) QueryByID(ctx context.Context, employeeID int) (Employee, error) 
 // Create adds a new employee to the system.
 func (c *Core) Create(ctx context.Context, nEmp NewEmployee) (Employee, error) {
 	now := time.Now()
+	eHobbies := make([]EmployeeHobby, 0, len(nEmp.EmployeeHobbies))
+	for i := range nEmp.EmployeeHobbies {
+		eHobbies = append(eHobbies, EmployeeHobby{
+			ID:   nEmp.EmployeeHobbies[i].ID,
+			Name: nEmp.EmployeeHobbies[i].Name,
+		})
+	}
 	emp := Employee{
-		FirstName:  nEmp.FirstName,
-		LastName:   nEmp.LastName,
-		NationalID: nEmp.NationalID,
-		Email:      nEmp.Email,
-		Cellphone:  nEmp.Cellphone,
-		TownID:     nEmp.TownID,
-		CreatedAt:  now,
-		UpdatedAt:  now,
+		FirstName:       nEmp.FirstName,
+		LastName:        nEmp.LastName,
+		NationalID:      nEmp.NationalID,
+		Email:           nEmp.Email,
+		Cellphone:       nEmp.Cellphone,
+		TownID:          nEmp.TownID,
+		AddressDetail:   nEmp.AddressDetail,
+		EmployeeHobbies: eHobbies,
+		CreatedAt:       now,
+		UpdatedAt:       now,
 	}
 
 	emp, err := c.storer.Create(ctx, emp)
@@ -118,6 +127,15 @@ func (c *Core) Update(ctx context.Context, emp Employee, uEmp UpdateEmployee) (E
 	emp.Cellphone = uEmp.Cellphone
 	emp.TownID = uEmp.TownID
 	emp.AddressDetail = uEmp.AddressDetail
+	eHobbies := make([]EmployeeHobby, 0, len(uEmp.EmployeeHobbies))
+	for i := range uEmp.EmployeeHobbies {
+		eHobbies = append(eHobbies, EmployeeHobby{
+			ID:   uEmp.EmployeeHobbies[i].ID,
+			Name: uEmp.EmployeeHobbies[i].Name,
+		})
+	}
+	emp.EmployeeHobbies = eHobbies
+
 	emp, err := c.storer.Update(ctx, emp)
 	if err != nil {
 		return Employee{}, fmt.Errorf("update: %w", err)

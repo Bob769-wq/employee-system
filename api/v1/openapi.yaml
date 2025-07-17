@@ -232,15 +232,7 @@ components:
         employeeHobbies:
           type: array
           items:
-            type: object
-            required:
-              - id
-              - name
-            properties:
-              id:
-                type: integer
-              name:
-                type: string
+            $ref: '#/components/schemas/EmployeeHobby'
         createdAt:
           type: string
           format: date-time
@@ -277,15 +269,7 @@ components:
         updateEmployeeHobbies:
           type: array
           items:
-            type: object
-            required:
-              - id
-              - name
-            properties:
-              id:
-                type: integer
-              name:
-                type: string
+            $ref: '#/components/schemas/UpdateEmployeeHobby'
     EmployeeUpdateInput:
       type: object
       required:
@@ -315,15 +299,27 @@ components:
         updateEmployeeHobbies:
           type: array
           items:
-            type: object
-            required:
-              - id
-              - name
-            properties:
-              id:
-                type: integer
-              name:
-                type: string
+            $ref: '#/components/schemas/UpdateEmployeeHobby'
+    EmployeeHobby:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    UpdateEmployeeHobby:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
     # Util
     PaginatedCollection:
       description: a generic type for paginated results

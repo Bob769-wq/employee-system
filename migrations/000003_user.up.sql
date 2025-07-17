@@ -5,7 +5,6 @@ CREATE TABLE IF NOT EXISTS hobbies
   UNIQUE (hobby_name)
 );
 
-
 CREATE TABLE IF NOT EXISTS employees
 (
     employee_id serial PRIMARY KEY,

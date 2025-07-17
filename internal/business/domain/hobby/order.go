@@ -3,7 +3,7 @@ package hobby
 import "github.com/mayainfo/employee-practice-be/internal/business/sdk/order"
 
 // DefaultOrderBy is the default order for queries.
-var DefaultOrderBy = order.NewBy(OrderByUpdatedAt, order.DESC)
+var DefaultOrderBy = order.NewBy(OrderByCreatedAt, order.DESC)
 
 // Set of fields that are allowed to be ordered by.
 const (

@@ -24,11 +24,12 @@ func Routes(app *web.App, cfg Config) {
 
 	hdl := newHandlers(cfg.Log, cfg.TxM, cfg.Hobby)
 
-	app.HandleFunc(http.MethodGet, version, "/hobbies", hdl.query)
+	// Testing only, may remove after completion:
+	app.HandleFunc(http.MethodPost, version, "/hobbies", hdl.create)
+	app.HandleFunc(http.MethodPut, version, "/hobbies/{hobbyID}", hdl.update, hobCtx)
+	app.HandleFunc(http.MethodDelete, version, "/hobbies/{hobbyID}", hdl.delete, hobCtx)
 	app.HandleFunc(http.MethodGet, version, "/hobbies/{hobbyID}", hdl.queryByID, hobCtx)
-	// app.HandleFunc(http.MethodPost, version, "/hobbies", hdl.create)
-	// app.HandleFunc(http.MethodPut, version, "/hobbies/{hobbyID}", hdl.update, hobCtx)
-	// app.HandleFunc(http.MethodDelete, version, "/hobbies/{hobbyID}", hdl.delete, hobCtx)
 
 	// Ready for testing:
+	app.HandleFunc(http.MethodGet, version, "/hobbies", hdl.query)
 }

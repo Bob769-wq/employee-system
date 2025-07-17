@@ -11,6 +11,7 @@ import (
 var orderByFields = map[string]string{
 	hobby.OrderByCreatedAt: "created_at",
 	hobby.OrderByUpdatedAt: "updated_at",
+	hobby.OrderByID:        "hobby_id",
 }
 
 func (s *Store) orderByClause(orderBy order.By, sb *strings.Builder) error {

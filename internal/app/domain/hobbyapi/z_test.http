@@ -10,14 +10,14 @@ GET {{baseUrl}}/{{pattern}}
 POST {{baseUrl}}/{{pattern}}
 
 {
-    "name": "string",
+    "name": "string"
 }
 
 ### Update
 PUT {{baseUrl}}/{{pattern}}/1
 
 {
-    "name": "string",
+    "name": "string"
 }
 
 ### Delete

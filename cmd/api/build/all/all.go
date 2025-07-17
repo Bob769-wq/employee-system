@@ -5,6 +5,7 @@ import (
 	"github.com/mayainfo/employee-practice-be/internal/app/domain/employeeapi"
 	"github.com/mayainfo/employee-practice-be/internal/app/domain/fileapi"
 	"github.com/mayainfo/employee-practice-be/internal/app/domain/healthapi"
+	"github.com/mayainfo/employee-practice-be/internal/app/domain/hobbyapi"
 	"github.com/mayainfo/employee-practice-be/internal/app/domain/townapi"
 	"github.com/mayainfo/employee-practice-be/internal/app/sdk/mux"
 	"github.com/mayainfo/employee-practice-be/internal/business/domain/auth"
@@ -13,6 +14,8 @@ import (
 	"github.com/mayainfo/employee-practice-be/internal/business/domain/employee/stores/employeedb"
 	"github.com/mayainfo/employee-practice-be/internal/business/domain/file"
 	"github.com/mayainfo/employee-practice-be/internal/business/domain/file/stores/filedb"
+	"github.com/mayainfo/employee-practice-be/internal/business/domain/hobby"
+	"github.com/mayainfo/employee-practice-be/internal/business/domain/hobby/stores/hobbydb"
 	"github.com/mayainfo/employee-practice-be/internal/business/domain/notification"
 	"github.com/mayainfo/employee-practice-be/internal/business/domain/town"
 	"github.com/mayainfo/employee-practice-be/internal/business/domain/town/stores/towndb"
@@ -31,6 +34,7 @@ func (add) Add(app *web.App, cfg mux.Config) {
 	notifyCore := notification.NewCore(cfg.Mailer, cfg.FrontendOrigin)
 	townCore := town.NewCore(towndb.NewStore(cfg.DB))
 	employeeCore := employee.NewCore(employeedb.NewStore(cfg.DB))
+	hobbyCore := hobby.NewCore(hobbydb.NewStore(cfg.DB))
 	healthapi.Routes(app, healthapi.Config{
 		Log: cfg.Log,
 		DB:  cfg.DB,
@@ -56,6 +60,11 @@ func (add) Add(app *web.App, cfg mux.Config) {
 		Log:  cfg.Log,
 		TxM:  cfg.TxM,
 		Town: townCore,
+	})
+	hobbyapi.Routes(app, hobbyapi.Config{
+		Log:   cfg.Log,
+		TxM:   cfg.TxM,
+		Hobby: hobbyCore,
 	})
 	employeeapi.Routes(app, employeeapi.Config{
 		Log:      cfg.Log,

@@ -177,6 +177,13 @@ func (s *Store) Create(ctx context.Context, emp employee.Employee) (employee.Emp
 		return employee.Employee{}, fmt.Errorf("namedexeccontext: %w", err)
 	}
 
+	// inject empID
+	emp.ID = dbemp.ID
+
+	if err := s.createEmployeeEmployeeHobbies(ctx, emp); err != nil {
+		return employee.Employee{}, fmt.Errorf("create employee hobbies: %w", err)
+	}
+
 	return toCoreEmployee(dbemp)
 }
 
@@ -205,6 +212,14 @@ func (s *Store) Update(ctx context.Context, emp employee.Employee) (employee.Emp
 			return employee.Employee{}, employee.ErrDataConflict
 		}
 		return employee.Employee{}, fmt.Errorf("namedquerystruct: %w", err)
+	}
+
+	if err := s.deleteAllEmployeeEmployeeHobbies(ctx, dbemp.ID); err != nil {
+		return employee.Employee{}, fmt.Errorf("delete employee hobbies: %w", err)
+	}
+
+	if err := s.createEmployeeEmployeeHobbies(ctx, emp); err != nil {
+		return employee.Employee{}, fmt.Errorf("create employee hobbies: %w", err)
 	}
 
 	return toCoreEmployee(dbemp)

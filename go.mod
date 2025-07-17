@@ -7,6 +7,7 @@ require (
 	cloud.google.com/go/storage v1.51.0
 	github.com/ardanlabs/conf/v3 v3.4.0
 	github.com/arl/statsviz v0.6.0
+	github.com/barkimedes/go-deepcopy v0.0.0-20220514131651-17c30cfc62df
 	github.com/go-playground/locales v0.14.1
 	github.com/go-playground/universal-translator v0.18.1
 	github.com/go-playground/validator/v10 v10.25.0

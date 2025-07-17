@@ -10,13 +10,21 @@ GET {{baseUrl}}/{{pattern}}
 POST {{baseUrl}}/{{pattern}}
 
 {
-    "firstName": "string",
-    "lastName": "string",
-    "addressDetail": "string",
-    "nationalId": "A123456789",
-    "email": "abseed@gmail.com",
-    "cellphone": "0912345678",
-    "townId": 1
+    "firstName": "strin3g",
+    "lastName": "striwefng",
+    "addressDetail": "stwefring",
+    "nationalId": "D123456789",
+    "email": "abceed@gmail.com",
+    "cellphone": "0934345678",
+    "townId": 1,
+    "employeeHobbies": [
+        {
+            "id": 1
+        },
+        {
+            "id": 2
+        }
+    ]
 }
 
 ### Update
@@ -29,7 +37,15 @@ PUT {{baseUrl}}/{{pattern}}/1
     "nationalId": "A123456789",
     "email": "abseed@gmail.com",
     "cellphone": "0912345678",
-    "townId": 2
+    "townId": 2,
+    "employeeHobbies": [
+        {
+            "id": 1
+        },
+        {
+            "id": 2
+        }
+    ]
 }
 
 ### Delete

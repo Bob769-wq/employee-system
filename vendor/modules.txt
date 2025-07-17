@@ -87,6 +87,9 @@ github.com/ardanlabs/conf/v3
 github.com/arl/statsviz
 github.com/arl/statsviz/internal/plot
 github.com/arl/statsviz/internal/static
+# github.com/barkimedes/go-deepcopy v0.0.0-20220514131651-17c30cfc62df
+## explicit
+github.com/barkimedes/go-deepcopy
 # github.com/cenkalti/backoff/v4 v4.3.0
 ## explicit; go 1.18
 github.com/cenkalti/backoff/v4

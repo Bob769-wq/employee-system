@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/barkimedes/go-deepcopy"
 	"github.com/mayainfo/employee-practice-be/internal/business/domain/employee"
 	"github.com/mayainfo/employee-practice-be/internal/business/sdk/sqldb"
 )
@@ -89,8 +90,17 @@ func (s *Store) deleteAllEmployeeEmployeeHobbies(ctx context.Context, ehobbyID i
 	return nil
 }
 
-func (s *Store) createEmployeeEmployeeHobbies(ctx context.Context, ehobby employee.Employee) error {
-	dbehobbys := toDBJSONEmployeeEmployeeHobbies(ehobby)
+func (s *Store) createEmployeeEmployeeHobbies(ctx context.Context, emp employee.Employee) error {
+	tmpDBEHobbys := toDBJSONEmployeeEmployeeHobbies(emp)
+
+	dbeHobbys, err := s.createNewHobbies(ctx, tmpDBEHobbys)
+	if err != nil {
+		return fmt.Errorf("create new hobbies: %w", err)
+	}
+
+	if len(dbeHobbys) == 0 {
+		return nil
+	}
 
 	const q = `
         INSERT INTO employee_hobbies
@@ -99,7 +109,7 @@ func (s *Store) createEmployeeEmployeeHobbies(ctx context.Context, ehobby employ
         (:employee_id, :hobby_id)
     `
 
-	if err := sqldb.NamedExecContext(ctx, s.db, q, dbehobbys); err != nil {
+	if err := sqldb.NamedExecContext(ctx, s.db, q, dbeHobbys); err != nil {
 		if errors.Is(err, sqldb.ErrDBIntegrity) || errors.Is(err, sqldb.ErrDBDuplicatedEntry) {
 			return employee.ErrDataConflict
 		}
@@ -107,4 +117,47 @@ func (s *Store) createEmployeeEmployeeHobbies(ctx context.Context, ehobby employ
 	}
 
 	return nil
+}
+
+func (s *Store) createNewHobbies(ctx context.Context, dbHobbies []dbEmployeeHobby) ([]dbEmployeeHobby, error) {
+	resultHobbies := deepcopy.MustAnything(dbHobbies).([]dbEmployeeHobby)
+	nHobbies := make([]dbEmployeeHobby, 0, len(resultHobbies))
+
+	if len(resultHobbies) > 0 {
+		for _, hobby := range resultHobbies {
+			if hobby.ID == 0 {
+				nHobbies = append(nHobbies, hobby)
+			}
+		}
+	}
+	// If there are no new hobbies to insert, return the existing ones
+	if len(nHobbies) == 0 {
+		return dbHobbies, nil
+	}
+
+	const q = `
+		INSERT INTO hobbies
+		( hobby_name)
+		VALUES
+		( :hobby_name )
+		RETURNING hobby_id, hobby_name
+	`
+
+	if err := sqldb.NamedQuerySlice(ctx, s.db, q, nHobbies, &nHobbies); err != nil {
+		if errors.Is(err, sqldb.ErrDBIntegrity) || errors.Is(err, sqldb.ErrDBDuplicatedEntry) {
+			return nil, employee.ErrDataConflict
+		}
+		return nil, fmt.Errorf("namedqueryslice: %w", err)
+	}
+
+	for i := range resultHobbies {
+		for _, nHobby := range nHobbies {
+			if resultHobbies[i].Name == nHobby.Name {
+				resultHobbies[i].ID = nHobby.ID
+				break
+			}
+		}
+	}
+
+	return resultHobbies, nil
 }

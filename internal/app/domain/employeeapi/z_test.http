@@ -17,7 +17,7 @@ POST {{baseUrl}}/{{pattern}}
     "email": "abceed@gmail.com",
     "cellphone": "0934345678",
     "townId": 1,
-    "employeeHobbies": [
+    "updateEmployeeHobbies": [
         {
             "id": 0,
             "name": "newwHobby"
@@ -39,7 +39,7 @@ PUT {{baseUrl}}/{{pattern}}/1
     "email": "abseed@gmail.com",
     "cellphone": "0912345678",
     "townId": 2,
-    "employeeHobbies": [
+    "updateEmployeeHobbies": [
         {
             "id": 1
         },

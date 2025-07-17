@@ -187,6 +187,7 @@ components:
         - cellphone
         - town
         - addressDetail
+        - employeeHobbies
         - createdAt
         - updatedAt
       properties:
@@ -228,6 +229,18 @@ components:
                   type: string
         addressDetail:
           type: string
+        employeeHobbies:
+          type: array
+          items:
+            type: object
+            required:
+              - id
+              - name
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
         createdAt:
           type: string
           format: date-time
@@ -245,6 +258,7 @@ components:
         - cellphone
         - townId
         - addressDetail
+        - updateEmployeeHobbies
       properties:
         firstName:
           type: string
@@ -260,6 +274,18 @@ components:
           type: integer
         addressDetail:
           type: string
+        updateEmployeeHobbies:
+          type: array
+          items:
+            type: object
+            required:
+              - id
+              - name
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
     EmployeeUpdateInput:
       type: object
       required:
@@ -270,6 +296,7 @@ components:
         - cellphone
         - townId
         - addressDetail
+        - updateEmployeeHobbies
       properties:
         firstName:
           type: string
@@ -285,6 +312,18 @@ components:
           type: integer
         addressDetail:
           type: string
+        updateEmployeeHobbies:
+          type: array
+          items:
+            type: object
+            required:
+              - id
+              - name
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
     # Util
     PaginatedCollection:
       description: a generic type for paginated results

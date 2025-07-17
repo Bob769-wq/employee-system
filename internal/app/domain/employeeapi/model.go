@@ -68,7 +68,7 @@ type AppNewEmployee struct {
 	Cellphone       string                   `json:"cellphone"`
 	TownID          int                      `json:"townId"`
 	AddressDetail   string                   `json:"addressDetail"`
-	EmployeeHobbies []AppUpdateEmployeeHobby `json:"employeeHobbies"`
+	EmployeeHobbies []AppUpdateEmployeeHobby `json:"updateEmployeeHobbies"`
 	// codegen:{AN}
 }
 
@@ -111,7 +111,7 @@ type AppUpdateEmployee struct {
 	Cellphone       string                   `json:"cellphone"`
 	TownID          int                      `json:"townId"`
 	AddressDetail   string                   `json:"addressDetail"`
-	EmployeeHobbies []AppUpdateEmployeeHobby `json:"employeeHobbies"`
+	EmployeeHobbies []AppUpdateEmployeeHobby `json:"updateEmployeeHobbies"`
 	// codegen:{AU}
 }
 

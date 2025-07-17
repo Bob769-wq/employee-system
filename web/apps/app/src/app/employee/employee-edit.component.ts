@@ -286,6 +286,7 @@ export class EmployeeEditComponent {
       cellphone: cellphone,
       townId: townId ?? 0,
       addressDetail: addressDetail,
+      updateEmployeeHobbies: [],
     };
 
     this.createMutation.mutate(input, {
@@ -313,6 +314,7 @@ export class EmployeeEditComponent {
       cellphone: cellphone,
       townId: townId ?? 0,
       addressDetail: addressDetail,
+      updateEmployeeHobbies: [],
     };
 
     this.updateMutation.mutate(

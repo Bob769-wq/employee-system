@@ -23,6 +23,7 @@ func rawFieldData() [][]string {
 	// sFalse可以控制create, update時是否包含這個欄位
 	// 例如：{"Name", typeString, "", dbPrefix, "", "", sFalse, sFalse},
 	data := [][]string{
+		{"EmployeeID", typeInt, "", noDBPrefix, "", "", "", ""},
 		{"Name", typeString, "", dbPrefix, "", "", "", ""},
 	}
 

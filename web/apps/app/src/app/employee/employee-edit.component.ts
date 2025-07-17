@@ -251,7 +251,7 @@ export class EmployeeEditComponent {
   }
 
   #create() {
-    const { firstName, lastName, nationalId, email, cellphone } =
+    const { firstName, lastName, nationalId, email, cellphone, townId } =
       this.form.getRawValue();
 
     const input: EmployeeCreateInput = {
@@ -260,7 +260,7 @@ export class EmployeeEditComponent {
       nationalId: nationalId,
       email: email,
       cellphone: cellphone,
-      townId: 1, // mock for now
+      townId: townId ?? 0,
     };
 
     this.createMutation.mutate(input, {
@@ -270,7 +270,7 @@ export class EmployeeEditComponent {
     });
   }
   #update() {
-    const { firstName, lastName, nationalId, email, cellphone } =
+    const { firstName, lastName, nationalId, email, cellphone, townId } =
       this.form.getRawValue();
 
     const input: EmployeeUpdateInput = {
@@ -279,7 +279,7 @@ export class EmployeeEditComponent {
       nationalId: nationalId,
       email: email,
       cellphone: cellphone,
-      townId: 1, // mock for now
+      townId: townId ?? 0,
     };
 
     this.updateMutation.mutate(

@@ -9,6 +9,106 @@ servers:
   - url: 'http://localhost:8080/v1'
     description: Mock server
 paths:
+  # HobbyAPI
+  /hobbies:
+    get:
+      tags:
+        - HobbyAPI
+      operationId: getHobbies
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/pageSizeParam'
+        - $ref: '#/components/parameters/orderByParam'
+      responses:
+        200:
+          description: A list of hobbies
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedCollection'
+                  - type: object
+                    required:
+                      - items
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Hobby'
+    post:
+      tags:
+        - HobbyAPI
+      operationId: createHobby
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HobbyCreateInput'
+      responses:
+        201:
+          description: The created hobby
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hobby'
+  /hobbies/{hobbyId}:
+    get:
+      tags:
+        - HobbyAPI
+      operationId: getHobby
+      parameters:
+        - name: hobbyId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The id of the hobby
+      responses:
+        200:
+          description: A hobby
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hobby'
+    put:
+      tags:
+        - HobbyAPI
+      operationId: updateHobby
+      parameters:
+        - name: hobbyId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The id of the hobby
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HobbyUpdateInput'
+      responses:
+        200:
+          description: The updated hobby
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hobby'
+    delete:
+      tags:
+        - HobbyAPI
+      operationId: deleteHobby
+      parameters:
+        - name: hobbyId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The id of the hobby
+      responses:
+        204:
+          description: No Content
   # TownAPI
   /cities:
     get:
@@ -148,6 +248,31 @@ paths:
 
 components:
   schemas:
+    # HobbyAPI
+    Hobby:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    HobbyCreateInput:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+    HobbyUpdateInput:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
     # TownAPI
     City:
       type: object

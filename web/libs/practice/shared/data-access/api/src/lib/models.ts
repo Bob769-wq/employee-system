@@ -5,6 +5,11 @@
 export type { City } from './models/city';
 export type { Employee } from './models/employee';
 export type { EmployeeCreateInput } from './models/employee-create-input';
+export type { EmployeeHobby } from './models/employee-hobby';
 export type { EmployeeUpdateInput } from './models/employee-update-input';
+export type { Hobby } from './models/hobby';
+export type { HobbyCreateInput } from './models/hobby-create-input';
+export type { HobbyUpdateInput } from './models/hobby-update-input';
 export type { PaginatedCollection } from './models/paginated-collection';
 export type { Town } from './models/town';
+export type { UpdateEmployeeHobby } from './models/update-employee-hobby';

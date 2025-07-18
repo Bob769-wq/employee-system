@@ -25,7 +25,10 @@
       "@app/common/signal/ui/selection-model": [
         "web/libs/common/signal/ui/selection-model/src/index.ts"
       ],
-      "@app/plugin": ["tools/plugin/src/index.ts"]
+      "@app/plugin": ["tools/plugin/src/index.ts"],
+      "@app/practice/shared/data-access/api": [
+        "web/libs/practice/shared/data-access/api/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]

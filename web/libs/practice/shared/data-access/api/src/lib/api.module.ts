@@ -6,6 +6,7 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
+import { HobbyApiService } from './services/hobby-api.service';
 import { TownApiService } from './services/town-api.service';
 import { EmployeeApiService } from './services/employee-api.service';
 
@@ -17,6 +18,7 @@ import { EmployeeApiService } from './services/employee-api.service';
   exports: [],
   declarations: [],
   providers: [
+    HobbyApiService,
     TownApiService,
     EmployeeApiService,
     ApiConfiguration

@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "pnpm run oasgen:app && pnpm exec nx serve app",
-    "oasgen:app": "rm -rf web/apps/app/src/app/shared/data-access/api && ng-openapi-gen --input ./api/v1/openapi.yaml --output web/apps/app/src/app/shared/data-access/api"
+    "start": "pnpm run oasgen:app && pnpm exec nx serve practice",
+    "oasgen:app": "rm -rf web/libs/practice/shared/data-access/api/src/lib && ng-openapi-gen --input ./api/v1/openapi.yaml --output web/libs/practice/shared/data-access/api/src/lib"
   },
   "private": true,
   "dependencies": {

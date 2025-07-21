@@ -6,6 +6,7 @@ import { firstValueFrom } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class TownQueryService {
   townsApi = inject(TownApiService);
+
   queryTowns = (param: { cityId: number }) =>
     queryOptions({
       queryKey: ['towns', 'list', param],
@@ -15,5 +16,11 @@ export class TownQueryService {
             cityId: param.cityId,
           }),
         ),
+    });
+
+  queryCities = () =>
+    queryOptions({
+      queryKey: ['towns', 'detail'],
+      queryFn: () => firstValueFrom(this.townsApi.getCities()),
     });
 }

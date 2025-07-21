@@ -10,7 +10,7 @@ import { EmployeeQueryService } from './employee-query';
     @if (employeeQuery.isPending()) {
       Loading...
     }
-    @if (employeeQuery.error()) {
+    @if (employeeQuery.isError()) {
       Error!
     }
     @if (employeeQuery.data(); as data) {

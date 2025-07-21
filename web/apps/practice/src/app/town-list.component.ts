@@ -15,7 +15,7 @@ import { TownQueryService } from './town-query';
     }
     @if (townQuery.data(); as towns) {
       @for (town of towns; track town.id) {
-        {{ town.name }}
+        {{ town.city.name }}
       }
     }
   `,

@@ -10,6 +10,7 @@ import { RouterLink, RouterOutlet } from '@angular/router';
       <a routerLink="employee" class="border p-3">employee</a>
       <a routerLink="town" class="border p-3">town</a>
       <a routerLink="formArray" class="border p-3">Form Array</a>
+      <a routerLink="demo" class="border p-3">Demo</a>
     </div>
 
     <div class="flex w-full justify-center p-12">

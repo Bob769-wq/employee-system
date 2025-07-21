@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 
+import { EmployeeDemoComponent } from './employee-demo.component';
 import { EmployeeListComponent } from './employee-list.component';
 import { EmployeeSystemComponent } from './employee-system.component';
 import { FormArrayComponent } from './form-array/form-array.component';
@@ -26,5 +27,9 @@ export const routes: Routes = [
   {
     path: 'town',
     component: TownListComponent,
+  },
+  {
+    path: 'demo',
+    component: EmployeeDemoComponent,
   },
 ];

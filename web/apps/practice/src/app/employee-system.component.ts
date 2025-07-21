@@ -13,7 +13,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 
-import { DockProblemService } from './dock-problem.service';
 import { EmployeeQueryService } from './employee-query';
 
 interface EmployeeList {
@@ -58,10 +57,18 @@ type EmployeeGroup = ReturnType<typeof createEmployeeGroup>;
             <mat-form-field>
               <mat-label>Name</mat-label>
               <mat-select formControlName="name">
-                @for (employee of employeesData; track employee.id) {
-                  <mat-option [value]="employee.name">{{
-                    employee.name
-                  }}</mat-option>
+                @if (employeeQuery.isPending()) {
+                  Loading...
+                }
+                @if (employeeQuery.isError()) {
+                  Error!
+                }
+                @if (employeeQuery.data(); as data) {
+                  @for (employee of data.items; track employee.id) {
+                    <mat-option [value]="employee.firstName">
+                      {{ employee.firstName }} - {{ employee.town.id }}
+                    </mat-option>
+                  }
                 }
               </mat-select>
             </mat-form-field>
@@ -89,35 +96,9 @@ type EmployeeGroup = ReturnType<typeof createEmployeeGroup>;
 
       <button mat-flat-button>Submit</button>
     </form>
-
-    <div class="mt-6">
-      <h2 class="text-2xl font-bold">Employee List</h2>
-      <div>
-        @for (employee of employeesData; track employee.id) {
-          {{ employee.name }} / {{ employee.townName }}
-        }
-      </div>
-    </div>
-
-    <div>
-      @if (employeeQuery.isPending()) {
-        Loading...
-      }
-      @if (employeeQuery.error()) {
-        Error!
-      }
-      @if (employeeQuery.data(); as data) {
-        @for (employee of data.items; track employee.id) {
-          {{ employee.firstName }} - {{ employee.town }}
-        }
-      }
-    </div>
   `,
 })
 export class EmployeeSystemComponent {
-  dockProblem = inject(DockProblemService);
-  employeesData = this.dockProblem.getEmployeesWithTownName();
-
   employeeQueryService = inject(EmployeeQueryService);
   employeeQuery = injectQuery(() =>
     this.employeeQueryService.queryEmployees({
@@ -146,11 +127,7 @@ export class EmployeeSystemComponent {
 
   submit() {
     this.trim();
-    const error = this.validate();
-    if (error) {
-      alert(error);
-      return;
-    }
+    this.validate();
 
     const employees = this.employees.getRawValue();
     confirm(`Submitted employees: ${JSON.stringify(employees, null, 2)}`);
@@ -168,10 +145,10 @@ export class EmployeeSystemComponent {
 
   validate() {
     if (this.employees.length === 0) {
-      return 'Add at least one.';
+      alert('Add at least one.');
     }
     if (this.form.invalid) {
-      return 'Fill out all fields correctly.';
+      alert('Fill out all fields correctly.');
     }
     return '';
   }

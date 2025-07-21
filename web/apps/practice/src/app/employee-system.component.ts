@@ -67,7 +67,7 @@ type EmployeeGroup = ReturnType<typeof createEmployeeGroup>;
                 @if (employeeQuery.data(); as data) {
                   @for (employee of data.items; track employee.id) {
                     <mat-option [value]="employee.firstName">
-                      {{ employee.firstName }} - {{ employee.town.name }}
+                      {{ employee.firstName }}
                     </mat-option>
                   }
                 }
@@ -135,7 +135,9 @@ export class EmployeeSystemComponent {
 
   submit() {
     this.trim();
-    this.validate();
+    if (!this.validate()) {
+      return;
+    }
 
     const employees = this.employees.getRawValue();
     confirm(`Submitted employees: ${JSON.stringify(employees, null, 2)}`);
@@ -151,13 +153,15 @@ export class EmployeeSystemComponent {
     });
   }
 
-  validate() {
+  validate(): boolean {
     if (this.employees.length === 0) {
       alert('Add at least one.');
+      return false;
     }
     if (this.form.invalid) {
       alert('Fill out all fields correctly.');
+      return false;
     }
-    return '';
+    return true;
   }
 }

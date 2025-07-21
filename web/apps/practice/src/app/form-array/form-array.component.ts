@@ -150,7 +150,9 @@ export class FormArrayComponent {
 
   submit() {
     this.trim();
-    this.validate();
+    if (!this.validate()) {
+      return;
+    }
 
     const languages = this.languages.getRawValue();
     confirm(`Submitted languages: ${JSON.stringify(languages, null, 2)}`);
@@ -167,13 +169,15 @@ export class FormArrayComponent {
     });
   }
 
-  validate() {
+  validate(): boolean {
     if (this.languages.length === 0) {
       alert('Add at least one language.');
+      return false;
     }
     if (this.form.invalid) {
       alert('Fill out all fields correctly.');
+      return false;
     }
-    return '';
+    return true;
   }
 }

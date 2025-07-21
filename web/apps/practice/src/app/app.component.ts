@@ -7,7 +7,7 @@ import { RouterLink, RouterOutlet } from '@angular/router';
   template: `
     <div class="m-6">
       <a routerLink="/" class="border p-3">Home</a>
-      <a routerLink="employee" class="border p-3">employee</a>
+      <a routerLink="list" class="border p-3">Employee List</a>
       <a routerLink="town" class="border p-3">town</a>
       <a routerLink="formArray" class="border p-3">Form Array</a>
       <a routerLink="demo" class="border p-3">Demo</a>

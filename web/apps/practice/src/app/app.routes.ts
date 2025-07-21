@@ -21,7 +21,7 @@ export const routes: Routes = [
     component: FormArrayComponent,
   },
   {
-    path: 'employee',
+    path: 'list',
     component: EmployeeListComponent,
   },
   {

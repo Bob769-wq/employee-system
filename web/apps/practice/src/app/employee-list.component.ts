@@ -11,7 +11,7 @@ import { EmployeeQueryService } from './employee-query';
       Loading...
     }
     @if (employeeQuery.error()) {
-      HAHA!
+      Error!
     }
     @if (employeeQuery.data(); as data) {
       @for (employee of data.items; track employee.id) {
@@ -26,7 +26,7 @@ export class EmployeeListComponent {
   employeeQueryService = inject(EmployeeQueryService);
 
   page = signal<number>(1);
-  pageSize = signal<number>(1);
+  pageSize = signal<number>(5);
 
   employeeQuery = injectQuery(() =>
     this.employeeQueryService.queryEmployees({

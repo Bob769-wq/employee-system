@@ -108,6 +108,13 @@ export class EmployeeSystemComponent {
     }),
   );
 
+  townQueryService = inject(TownQueryService);
+  townQuery = injectQuery(() =>
+    this.townQueryService.queryTowns({
+      cityId: 1,
+    }),
+  );
+
   readonly #fb = inject(NonNullableFormBuilder);
   readonly form = this.#fb.group({
     employees: new FormArray<EmployeeGroup>([createEmployeeGroup()]),

@@ -14,6 +14,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 
 import { EmployeeQueryService } from './employee-query';
+import { TownQueryService } from './town-query';
 
 interface EmployeeList {
   name: string;
@@ -66,7 +67,7 @@ type EmployeeGroup = ReturnType<typeof createEmployeeGroup>;
                 @if (employeeQuery.data(); as data) {
                   @for (employee of data.items; track employee.id) {
                     <mat-option [value]="employee.firstName">
-                      {{ employee.firstName }} - {{ employee.town.id }}
+                      {{ employee.firstName }} - {{ employee.town.name }}
                     </mat-option>
                   }
                 }

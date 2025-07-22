@@ -19,9 +19,7 @@ import { EmployeeQueryService } from './employee-query';
         @for (employee of data.items; track employee.id) {
           <div>
             <div>
-              <span class="font-medium"
-                >{{ employee.lastName }} {{ employee.firstName }}
-              </span>
+              <span>{{ employee.lastName }} {{ employee.firstName }}</span>
               <span>{{ employee.cellphone }}</span>
               <span>ID{{ employee.id }}</span>
               <span>{{ employee.email }}</span>

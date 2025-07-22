@@ -1,34 +1,65 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
-  FormControl,
-  FormGroup,
+  NonNullableFormBuilder,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { NgxControlError } from 'ngxtension/control-error';
 
 @Component({
   selector: 'app-employee-demo',
-  imports: [MatInputModule, MatFormFieldModule, ReactiveFormsModule],
+  imports: [
+    MatInputModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    NgxControlError,
+  ],
   template: `
     <form [formGroup]="employeeForm" (submit)="submit()">
       <div class="flex gap-4">
         <mat-form-field>
           <mat-label>Name</mat-label>
-          <input matInput formControlName="name" />
+          <input type="text" matInput formControlName="name" />
+          <mat-error
+            *ngxControlError="employeeForm.controls.name; track: 'required'"
+          >
+            Name is required
+          </mat-error>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Phone</mat-label>
-          <input matInput formControlName="cellphone" />
+          <input type="text" matInput formControlName="cellphone" />
+          <mat-error
+            *ngxControlError="
+              employeeForm.controls.cellphone;
+              track: 'required'
+            "
+          >
+            Phone is required
+          </mat-error>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Email</mat-label>
-          <input matInput formControlName="email" />
+          <input type="email" matInput formControlName="email" />
+          <mat-error
+            *ngxControlError="employeeForm.controls.email; track: 'required'"
+          >
+            Email is required
+          </mat-error>
         </mat-form-field>
         <mat-form-field>
           <mat-label>ID</mat-label>
-          <input matInput formControlName="ID" />
+          <input type="text" matInput formControlName="nationalID" />
+          <mat-error
+            *ngxControlError="
+              employeeForm.controls.nationalID;
+              track: 'required'
+            "
+          >
+            NationID is required
+          </mat-error>
         </mat-form-field>
       </div>
       <button class="mx-2 p-2 outline">Submit</button>
@@ -36,47 +67,41 @@ import { MatInputModule } from '@angular/material/input';
   `,
 })
 export class EmployeeDemoComponent {
-  employeeForm = new FormGroup({
-    name: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
-    cellphone: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
-    email: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
-    ID: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
+  readonly fb = inject(NonNullableFormBuilder);
+
+  employeeForm = this.fb.group({
+    name: ['', [Validators.required, Validators.minLength(2)]],
+    cellphone: ['', [Validators.required]],
+    email: ['', [Validators.required, Validators.email]],
+    nationalID: ['', [Validators.required, Validators.minLength(10)]],
   });
 
   submit() {
     this.trim();
-    this.validate();
+    if (!this.validate()) {
+      return;
+    }
     if (this.employeeForm.valid) {
       console.log(this.employeeForm.value);
     }
   }
 
   trim() {
-    const formValue = this.employeeForm.getRawValue();
+    const { name, cellphone, email, nationalID } =
+      this.employeeForm.getRawValue();
     this.employeeForm.patchValue({
-      name: formValue.name.trim(),
-      cellphone: formValue.cellphone.trim(),
-      email: formValue.email.trim(),
-      ID: formValue.ID.trim(),
+      name: name.trim(),
+      cellphone: cellphone.trim(),
+      email: email.trim(),
+      nationalID: nationalID.trim(),
     });
   }
 
-  validate() {
+  validate(): boolean {
     if (this.employeeForm.invalid) {
       alert('Fill out all fields correctly.');
+      return false;
     }
-    return '';
+    return true;
   }
 }

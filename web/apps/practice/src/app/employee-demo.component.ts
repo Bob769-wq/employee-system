@@ -27,6 +27,11 @@ import { NgxControlError } from 'ngxtension/control-error';
           >
             Name is required
           </mat-error>
+          <mat-error
+            *ngxControlError="employeeForm.controls.name; track: 'minlength'"
+          >
+            Name too short
+          </mat-error>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Phone</mat-label>
@@ -48,6 +53,11 @@ import { NgxControlError } from 'ngxtension/control-error';
           >
             Email is required
           </mat-error>
+          <mat-error
+            *ngxControlError="employeeForm.controls.email; track: 'email'"
+          >
+            Must be an email
+          </mat-error>
         </mat-form-field>
         <mat-form-field>
           <mat-label>ID</mat-label>
@@ -58,7 +68,15 @@ import { NgxControlError } from 'ngxtension/control-error';
               track: 'required'
             "
           >
-            NationID is required
+            National ID is required
+          </mat-error>
+          <mat-error
+            *ngxControlError="
+              employeeForm.controls.nationalID;
+              track: 'minlength'
+            "
+          >
+            Incorrect
           </mat-error>
         </mat-form-field>
       </div>

@@ -21,7 +21,12 @@ import { NgxControlError } from 'ngxtension/control-error';
       <div class="flex gap-4">
         <mat-form-field>
           <mat-label>Name</mat-label>
-          <input type="text" matInput formControlName="name" />
+          <input
+            type="text"
+            placeholder="Bob"
+            matInput
+            formControlName="name"
+          />
           <mat-error
             *ngxControlError="employeeForm.controls.name; track: 'required'"
           >
@@ -35,7 +40,12 @@ import { NgxControlError } from 'ngxtension/control-error';
         </mat-form-field>
         <mat-form-field>
           <mat-label>Phone</mat-label>
-          <input type="text" matInput formControlName="cellphone" />
+          <input
+            type="text"
+            placeholder="09..."
+            matInput
+            formControlName="cellphone"
+          />
           <mat-error
             *ngxControlError="
               employeeForm.controls.cellphone;
@@ -47,7 +57,12 @@ import { NgxControlError } from 'ngxtension/control-error';
         </mat-form-field>
         <mat-form-field>
           <mat-label>Email</mat-label>
-          <input type="email" matInput formControlName="email" />
+          <input
+            type="email"
+            placeholder="XXX@gmail.com"
+            matInput
+            formControlName="email"
+          />
           <mat-error
             *ngxControlError="employeeForm.controls.email; track: 'required'"
           >
@@ -61,7 +76,12 @@ import { NgxControlError } from 'ngxtension/control-error';
         </mat-form-field>
         <mat-form-field>
           <mat-label>ID</mat-label>
-          <input type="text" matInput formControlName="nationalID" />
+          <input
+            type="text"
+            placeholder="A123..."
+            matInput
+            formControlName="nationalID"
+          />
           <mat-error
             *ngxControlError="
               employeeForm.controls.nationalID;

@@ -14,7 +14,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 
 import { EmployeeQueryService } from './employee-query';
-import { TownQueryService } from './town-query';
+import { TownQueryService } from './town/data-access/town-query';
 
 interface EmployeeList {
   name: string;

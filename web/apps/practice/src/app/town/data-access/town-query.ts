@@ -5,22 +5,23 @@ import { firstValueFrom } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class TownQueryService {
-  townsApi = inject(TownApiService);
-
-  queryTowns = (param: { cityId: number }) =>
-    queryOptions({
-      queryKey: ['towns', 'list', param],
-      queryFn: () =>
-        firstValueFrom(
-          this.townsApi.getTowns({
-            cityId: param.cityId,
-          }),
-        ),
-    });
+  townsService = inject(TownApiService);
 
   queryCities = () =>
     queryOptions({
-      queryKey: ['towns', 'detail'],
-      queryFn: () => firstValueFrom(this.townsApi.getCities()),
+      queryKey: ['cities', 'list'],
+      queryFn: () => firstValueFrom(this.townsService.getCities()),
+    });
+
+  queryTowns = (cityId: number) =>
+    queryOptions({
+      queryKey: ['towns', 'list', cityId],
+      queryFn: () =>
+        firstValueFrom(
+          this.townsService.getTowns({
+            cityId,
+          }),
+        ),
+      enabled: !!cityId,
     });
 }

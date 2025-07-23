@@ -22,4 +22,11 @@ export class LoadingService {
       disableClose: true,
     });
   }
+
+  hide() {
+    if (this.dialogRef) {
+      this.dialogRef.close();
+      this.dialogRef = undefined;
+    }
+  }
 }

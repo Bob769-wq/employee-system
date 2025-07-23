@@ -7,25 +7,28 @@ import {
 } from '@tanstack/angular-query-experimental';
 import { toast } from 'ngx-sonner';
 import { firstValueFrom } from 'rxjs';
+import { GetEmployees$Params } from 'web/libs/practice/shared/data-access/api/src/lib/fn/employee-api/get-employees';
 import { EmployeeCreateInput } from 'web/libs/practice/shared/data-access/api/src/lib/models/employee-create-input';
 import { EmployeeUpdateInput } from 'web/libs/practice/shared/data-access/api/src/lib/models/employee-update-input';
 
-import { loadingService } from './loading.service';
+import { handleErrorMessage } from '../../shared/error-handling';
+import { LoadingService } from '../../shared/services/loading.service';
 
 @Injectable({ providedIn: 'root' })
 export class EmployeeQueryService {
-  loadingService = inject(loadingService);
+  employeesService = inject(EmployeeApiService);
+  loadingService = inject(LoadingService);
   qc = inject(QueryClient);
 
-  employeesApi = inject(EmployeeApiService);
-  queryEmployees = (param: { page: number; pageSize: number }) =>
+  queryEmployees = (params?: GetEmployees$Params) =>
     queryOptions({
-      queryKey: ['employees', 'list', param],
+      queryKey: ['employees', 'list', params],
       queryFn: () =>
         firstValueFrom(
-          this.employeesApi.getEmployees({
-            page: param.page,
-            pageSize: param.pageSize,
+          this.employeesService.getEmployees({
+            page: params?.page,
+            pageSize: params?.pageSize,
+            orderBy: params?.orderBy,
           }),
         ),
     });
@@ -34,7 +37,7 @@ export class EmployeeQueryService {
     queryOptions({
       queryKey: ['employees', 'detail', employeeId],
       queryFn: () =>
-        firstValueFrom(this.employeesApi.getEmployee({ employeeId })),
+        firstValueFrom(this.employeesService.getEmployee({ employeeId })),
       enabled: !!employeeId,
     });
 
@@ -52,7 +55,7 @@ export class EmployeeQueryService {
         //   updateEmployeeHobbies: Array<UpdateEmployeeHobby>;
         // }) =>
         firstValueFrom(
-          this.employeesApi.createEmployee({
+          this.employeesService.createEmployee({
             body: params,
           }),
         ),
@@ -65,8 +68,8 @@ export class EmployeeQueryService {
         });
         toast.success('人員新增成功');
       },
-      onError: () => {
-        toast.error('發生錯誤');
+      onError: (error) => {
+        toast.error(handleErrorMessage(error));
       },
       onSettled: () => {
         this.loadingService.hide();
@@ -82,7 +85,9 @@ export class EmployeeQueryService {
         employeeId: number;
         body: EmployeeUpdateInput;
       }) =>
-        firstValueFrom(this.employeesApi.updateEmployee({ employeeId, body })),
+        firstValueFrom(
+          this.employeesService.updateEmployee({ employeeId, body }),
+        ),
       onMutate: () => {
         this.loadingService.show();
       },
@@ -92,8 +97,8 @@ export class EmployeeQueryService {
         });
         toast.success('人員更新成功');
       },
-      onError: () => {
-        toast.error('發生錯誤');
+      onError: (error) => {
+        toast.error(handleErrorMessage(error));
       },
       onSettled: () => {
         this.loadingService.hide();
@@ -103,7 +108,7 @@ export class EmployeeQueryService {
   deleteMutation = () =>
     injectMutation(() => ({
       mutationFn: (employeeId: number) =>
-        firstValueFrom(this.employeesApi.deleteEmployee({ employeeId })),
+        firstValueFrom(this.employeesService.deleteEmployee({ employeeId })),
       onMutate: () => {
         this.loadingService.show();
       },
@@ -113,8 +118,8 @@ export class EmployeeQueryService {
         });
         toast.success('人員刪除成功');
       },
-      onError: () => {
-        toast.error('發生錯誤');
+      onError: (error) => {
+        toast.error(handleErrorMessage(error));
       },
       onSettled: () => {
         this.loadingService.hide();

@@ -13,7 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 
-import { EmployeeQueryService } from './employee-query';
+import { EmployeeQueryService } from './employee/data-access/employee-query';
 import { TownQueryService } from './town/data-access/town-query';
 
 interface EmployeeList {

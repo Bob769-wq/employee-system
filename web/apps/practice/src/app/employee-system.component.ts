@@ -14,7 +14,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 
 import { EmployeeQueryService } from './employee/data-access/employee-query';
-import { TownQueryService } from './town/data-access/town-query';
 
 interface EmployeeList {
   name: string;
@@ -105,13 +104,6 @@ export class EmployeeSystemComponent {
     this.employeeQueryService.queryEmployees({
       page: 1,
       pageSize: 5,
-    }),
-  );
-
-  townQueryService = inject(TownQueryService);
-  townQuery = injectQuery(() =>
-    this.townQueryService.queryTowns({
-      cityId: 1,
     }),
   );
 

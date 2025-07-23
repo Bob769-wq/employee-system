@@ -9,4 +9,11 @@ export const routes: Routes = [
         (m) => m.EmployeeListComponent,
       ),
   },
+  {
+    path: 'employees/:employeeId/edit',
+    loadComponent: () =>
+      import('./employee/employee-edit.component').then(
+        (m) => m.EmployeeEditComponent,
+      ),
+  },
 ];

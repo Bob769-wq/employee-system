@@ -20,6 +20,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { controlValue } from '@app/common/signal/ui/form';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 import { NgxControlError } from 'ngxtension/control-error';
+import { EmployeeCreateInput } from 'web/libs/practice/shared/data-access/api/src/lib/models/employee-create-input';
+import { EmployeeUpdateInput } from 'web/libs/practice/shared/data-access/api/src/lib/models/employee-update-input';
+
 import { PrimaryButtonComponent } from '../shared/primary-button.component';
 import { TownQueryService } from '../town/data-access/town-query';
 import { EmployeeQueryService } from './data-access/employee-query';
@@ -154,13 +157,81 @@ import { EmployeeQueryService } from './data-access/employee-query';
               </mat-form-field>
             </div>
           </div>
+          <div class="flex gap-16 px-8">
+            <div class="flex">
+              <mat-label class="mr-6 w-32 text-2xl">身分證字號</mat-label>
+              <mat-form-field>
+                <input
+                  matInput
+                  type="text"
+                  placeholder="身分證字號"
+                  formControlName="nationalId"
+                />
+                <mat-error
+                  *ngxControlError="form.controls.nationalId; track: 'required'"
+                >
+                  必填
+                </mat-error>
+                <mat-error
+                  *ngxControlError="form.controls.nationalId; track: 'pattern'"
+                >
+                  不正確的格式
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="flex">
+              <mat-label class="mr-6 w-12 text-2xl">Email</mat-label>
+              <mat-form-field>
+                <input
+                  matInput
+                  type="email"
+                  placeholder="Email"
+                  formControlName="email"
+                />
+                <mat-error
+                  *ngxControlError="form.controls.email; track: 'required'"
+                >
+                  必填
+                </mat-error>
+                <mat-error
+                  *ngxControlError="form.controls.email; track: 'email'"
+                >
+                  不正確的格式
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="flex">
+              <mat-label class="mr-6 w-12 text-2xl">手機</mat-label>
+              <mat-form-field>
+                <input
+                  matInput
+                  type="text"
+                  placeholder="手機"
+                  formControlName="cellphone"
+                />
+                <mat-error
+                  *ngxControlError="form.controls.cellphone; track: 'required'"
+                >
+                  必填
+                </mat-error>
+                <mat-error
+                  *ngxControlError="form.controls.cellphone; track: 'pattern'"
+                >
+                  不正確的格式
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="w-32 self-center">
+            <app-primary-button [label]="isNew() ? '新增' : '更新'" />
+          </div>
         </div>
       </div>
     </form>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EditComponent {
+export class EmployeeEditComponent {
   readonly fb = inject(NonNullableFormBuilder);
   townQueryService = inject(TownQueryService);
   employeeQueryService = inject(EmployeeQueryService);
@@ -288,5 +359,58 @@ export class EditComponent {
       townId,
       addressDetail,
     } = this.form.getRawValue();
+
+    const input: EmployeeCreateInput = {
+      firstName,
+      lastName: lastName,
+      nationalId: nationalId,
+      email: email,
+      cellphone: cellphone,
+      townId: townId ?? 0,
+      addressDetail: addressDetail,
+      updateEmployeeHobbies: [],
+    };
+
+    this.createMutation.mutate(input, {
+      //
+      onSuccess: () => {
+        //
+      },
+    });
+  }
+
+  update() {
+    const {
+      firstName,
+      lastName,
+      nationalId,
+      email,
+      cellphone,
+      townId,
+      addressDetail,
+    } = this.form.getRawValue();
+
+    const input: EmployeeUpdateInput = {
+      firstName: firstName,
+      lastName: lastName,
+      nationalId: nationalId,
+      email: email,
+      cellphone: cellphone,
+      townId: townId ?? 0,
+      addressDetail: addressDetail,
+      updateEmployeeHobbies: [],
+    };
+
+    this.updateMutation.mutate(
+      {
+        employeeId: this.existEmployeeId(),
+        body: input,
+      },
+      {
+        onSuccess: () => {
+          //
+        },
+      },
+    );
   }
 }

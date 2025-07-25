@@ -17,11 +17,11 @@ import { EmployeeQueryService } from './data-access/employee-query';
       } @else if (employeesQuery.isError()) {
         讀取失敗
       } @else {
-        @if (employeesQuery.data()?.items; as employeeList) {
-          @if (employeeList.length === 0) {
+        @if (employeesQuery.data(); as employeeList) {
+          @if (employeeList.items.length === 0) {
             <div class="text-center text-gray-500">沒有員工資料</div>
           } @else {
-            <table mat-table [dataSource]="employeeList">
+            <table mat-table [dataSource]="employeeList.items">
               <ng-container matColumnDef="id">
                 <th mat-header-cell *matHeaderCellDef>ID</th>
                 <td mat-cell *matCellDef="let element">{{ element.id }}</td>

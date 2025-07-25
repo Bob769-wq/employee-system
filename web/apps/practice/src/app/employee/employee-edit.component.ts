@@ -281,6 +281,7 @@ export class EmployeeEditComponent {
   isNew = computed(() => this.employeeId() === 'new');
   existEmployeeId = computed(() => {
     return numberAttribute(this.employeeId());
+    //把string轉成數字因為ID部分要是數字
   });
   chosenTownId = controlValue(this.form.controls.townId);
 

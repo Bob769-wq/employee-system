@@ -27,6 +27,11 @@ export interface GetHobbies$Params {
  * The field to order by
  */
   orderBy?: string;
+
+/**
+ * Text search
+ */
+  searchText?: string;
 }
 
 export function getHobbies(http: HttpClient, rootUrl: string, params?: GetHobbies$Params, context?: HttpContext): Observable<StrictHttpResponse<PaginatedCollection & {
@@ -37,6 +42,7 @@ export function getHobbies(http: HttpClient, rootUrl: string, params?: GetHobbie
     rb.query('page', params.page, {});
     rb.query('pageSize', params.pageSize, {});
     rb.query('orderBy', params.orderBy, {});
+    rb.query('searchText', params.searchText, {});
   }
 
   return http.request(

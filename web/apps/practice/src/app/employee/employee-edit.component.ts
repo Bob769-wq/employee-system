@@ -22,10 +22,14 @@ import { injectQuery } from '@tanstack/angular-query-experimental';
 import { NgxControlError } from 'ngxtension/control-error';
 import { EmployeeCreateInput } from 'web/libs/practice/shared/data-access/api/src/lib/models/employee-create-input';
 import { EmployeeUpdateInput } from 'web/libs/practice/shared/data-access/api/src/lib/models/employee-update-input';
+import { UpdateEmployeeHobby } from 'web/libs/practice/shared/data-access/api/src/lib/models/update-employee-hobby';
 
 import { PrimaryButtonComponent } from '../shared/primary-button.component';
 import { TownQueryService } from '../town/data-access/town-query';
 import { EmployeeQueryService } from './data-access/employee-query';
+import { EmployeeHobbyListComponent } from './employee-hobby-list.component';
+import { EmployeeHobbyService } from './employee-hobby-service';
+import { SelectionDialogService } from './table-selection/selection.dialog';
 
 @Component({
   selector: 'app-employee-edit',
@@ -39,6 +43,7 @@ import { EmployeeQueryService } from './data-access/employee-query';
     MatSelectModule,
     MatIconModule,
     NgxControlError,
+    EmployeeHobbyListComponent,
   ],
   template: `
     <div class="px-6 py-2 text-2xl">
@@ -222,6 +227,25 @@ import { EmployeeQueryService } from './data-access/employee-query';
               </mat-form-field>
             </div>
           </div>
+
+          <div class="flex items-start">
+            <div class="flex px-8">
+              <mat-label class="mr-6 w-16 text-2xl">興趣</mat-label>
+              <button
+                type="button"
+                (click)="chooseHobby()"
+                class="mr-6 flex w-16 items-center justify-center"
+              >
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+          </div>
+          <div class="flex gap-16 px-8">
+            <div class="flex">
+              <app-employee-hobby-list></app-employee-hobby-list>
+            </div>
+          </div>
+
           <div class="w-32 self-center">
             <app-primary-button [label]="isNew() ? '新增' : '更新'" />
           </div>
@@ -233,8 +257,10 @@ import { EmployeeQueryService } from './data-access/employee-query';
 })
 export class EmployeeEditComponent {
   readonly fb = inject(NonNullableFormBuilder);
+  readonly selectionDialogService = inject(SelectionDialogService);
   townQueryService = inject(TownQueryService);
   employeeQueryService = inject(EmployeeQueryService);
+  employeeHobbyService = inject(EmployeeHobbyService);
 
   form = this.fb.group({
     firstName: this.fb.control('', {
@@ -292,6 +318,15 @@ export class EmployeeEditComponent {
     this.initializeFormEffect();
   }
 
+  async chooseHobby() {
+    const result = await this.selectionDialogService.open({
+      hobbies: this.employeeHobbyService.chosenEmployeeHobbies(),
+    });
+    if (result) {
+      this.employeeHobbyService.chosenEmployeeHobbies.set([...result.hobbies]);
+    }
+  }
+
   initializeFormEffect() {
     effect(() => {
       const currentData = this.employeeQueryById.data();
@@ -306,6 +341,9 @@ export class EmployeeEditComponent {
           townId: currentData.town.id,
           addressDetail: currentData.addressDetail,
         });
+        this.employeeHobbyService.resetChosenEmployeeHobbies([
+          ...currentData.employeeHobbies,
+        ]);
       } else {
         this.form.patchValue({
           firstName: '',
@@ -317,6 +355,7 @@ export class EmployeeEditComponent {
           townId: undefined,
           addressDetail: '',
         });
+        this.employeeHobbyService.resetChosenEmployeeHobbies([]);
       }
     });
   }
@@ -361,6 +400,15 @@ export class EmployeeEditComponent {
       addressDetail,
     } = this.form.getRawValue();
 
+    const updateEmployeeHobbies = this.employeeHobbyService
+      .chosenEmployeeHobbies()
+      .map((hobby) => {
+        return {
+          id: hobby.id,
+          name: hobby.id > 0 ? '' : hobby.name,
+        } as UpdateEmployeeHobby;
+      });
+
     const input: EmployeeCreateInput = {
       firstName,
       lastName: lastName,
@@ -369,7 +417,7 @@ export class EmployeeEditComponent {
       cellphone: cellphone,
       townId: townId ?? 0,
       addressDetail: addressDetail,
-      updateEmployeeHobbies: [],
+      updateEmployeeHobbies: updateEmployeeHobbies,
     };
 
     this.createMutation.mutate(input, {
@@ -391,6 +439,15 @@ export class EmployeeEditComponent {
       addressDetail,
     } = this.form.getRawValue();
 
+    const updateEmployeeHobbies = this.employeeHobbyService
+      .chosenEmployeeHobbies()
+      .map((hobby) => {
+        return {
+          id: hobby.id,
+          name: hobby.id > 0 ? '' : hobby.name,
+        } as UpdateEmployeeHobby;
+      });
+
     const input: EmployeeUpdateInput = {
       firstName: firstName,
       lastName: lastName,
@@ -399,7 +456,7 @@ export class EmployeeEditComponent {
       cellphone: cellphone,
       townId: townId ?? 0,
       addressDetail: addressDetail,
-      updateEmployeeHobbies: [],
+      updateEmployeeHobbies: updateEmployeeHobbies,
     };
 
     this.updateMutation.mutate(

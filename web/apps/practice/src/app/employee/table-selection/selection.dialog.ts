@@ -122,7 +122,7 @@ export class SelectionDialogService {
                         totalItems: data.total,
                       }
               "
-              table="matTable"
+              #table="matTable"
             >
               <ng-container matColumnDef="checkbox">
                 <mat-header-cell *matHeaderCellDef>
@@ -153,7 +153,9 @@ export class SelectionDialogService {
               <mat-header-row
                 *matHeaderRowDef="displayedColumns; sticky: true"
               ></mat-header-row>
-              <mat-row *matRowDef="let row; colums: displayedColumns"></mat-row>
+              <mat-row
+                *matRowDef="let row; columns: displayedColumns"
+              ></mat-row>
             </mat-table>
           }
         }

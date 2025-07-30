@@ -48,15 +48,13 @@ import { EmployeeHobbyService } from './employee-hobby-service';
             <mat-icon>delete</mat-icon>
           </button>
         </td>
-        <ng-container>
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr
-            mat-row
-            class="cursor-pointer hover:bg-gray-100"
-            *matRowDef="let row; columns: displayedColumns"
-          ></tr>
-        </ng-container>
       </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        class="cursor-pointer hover:bg-gray-100"
+        *matRowDef="let row; columns: displayedColumns"
+      ></tr>
     </table>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
